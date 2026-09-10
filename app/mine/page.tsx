@@ -15,7 +15,8 @@ import {
   LogOut,
   HelpCircle,
   ChevronRight,
-  Sparkles
+  Sparkles,
+  X
 } from 'lucide-react';
 import { showToast } from '@/components/Toast';
 
@@ -113,67 +114,67 @@ export default function MinePage() {
   if (loading) {
     return (
       <div className="p-4 space-y-4 animate-pulse">
-        <div className="h-44 bg-slate-900/20 rounded-3xl" />
-        <div className="h-32 bg-white rounded-2xl" />
-        <div className="h-32 bg-white rounded-2xl" />
+        <div className="h-44 bg-slate-200 rounded-3xl" />
+        <div className="h-32 bg-white rounded-2xl border border-slate-200" />
+        <div className="h-32 bg-white rounded-2xl border border-slate-200" />
       </div>
     );
   }
 
   return (
-    <div className="px-4 py-5 space-y-4 max-w-5xl mx-auto">
+    <div className="px-4 py-6 space-y-5 max-w-5xl mx-auto text-slate-900">
       {/* Header Profile Card */}
-      <div className="bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 rounded-3xl p-5 text-white shadow-xl relative overflow-hidden border border-slate-800">
-        <div className="flex items-center space-x-3 mb-4">
-          <div className="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-black text-xl shadow-lg">
+      <div className="bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden border border-slate-800">
+        <div className="flex items-center space-x-4 mb-5">
+          <div className="w-14 h-14 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-black text-2xl shadow-lg shadow-blue-500/30">
             {user?.full_name ? user.full_name.charAt(0).toUpperCase() : 'U'}
           </div>
           <div className="flex-1">
             <div className="flex items-center space-x-2">
-              <h2 className="text-base font-black text-white">{user?.full_name || 'CATL Investor'}</h2>
-              <span className="text-[10px] font-extrabold bg-blue-500/20 text-cyan-300 border border-blue-400/30 px-2 py-0.5 rounded-md">
+              <h2 className="text-lg font-black text-white">{user?.full_name || 'CATL Investor'}</h2>
+              <span className="text-[10px] font-extrabold bg-blue-600/30 text-cyan-300 border border-blue-500/40 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                 VIP 1
               </span>
             </div>
-            <p className="text-xs text-sky-200/80">{user?.phone_or_email}</p>
-            <p className="text-[10px] text-cyan-300 font-mono mt-0.5">Code: {user?.referral_code}</p>
+            <p className="text-xs text-sky-300 font-semibold">{user?.phone_or_email}</p>
+            <p className="text-[11px] text-cyan-400 font-mono mt-0.5">Invite Code: {user?.referral_code}</p>
           </div>
         </div>
 
         {/* Financial Grid */}
-        <div className="grid grid-cols-2 gap-2.5 pt-3 border-t border-slate-800 text-xs">
-          <div className="bg-white/10 p-2.5 rounded-xl backdrop-blur-sm">
-            <span className="text-[9px] uppercase tracking-wider text-sky-300 font-semibold block">Wallet Balance</span>
-            <span className="text-base font-black text-white">NPR {user?.balance ? user.balance.toFixed(2) : '0.00'}</span>
+        <div className="grid grid-cols-2 gap-3 pt-4 border-t border-slate-800 text-xs">
+          <div className="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+            <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">Wallet Balance</span>
+            <span className="text-lg font-black text-white">NPR {user?.balance ? user.balance.toFixed(2) : '0.00'}</span>
           </div>
-          <div className="bg-white/10 p-2.5 rounded-xl backdrop-blur-sm">
-            <span className="text-[9px] uppercase tracking-wider text-sky-300 font-semibold block">Total Revenue</span>
-            <span className="text-base font-black text-cyan-400">NPR {user?.total_income ? user.total_income.toFixed(2) : '0.00'}</span>
+          <div className="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+            <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">Total Revenue</span>
+            <span className="text-lg font-black text-cyan-400">NPR {user?.total_income ? user.total_income.toFixed(2) : '0.00'}</span>
           </div>
-          <div className="bg-white/10 p-2.5 rounded-xl backdrop-blur-sm">
-            <span className="text-[9px] uppercase tracking-wider text-sky-300 font-semibold block">Total Recharged</span>
+          <div className="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+            <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">Total Recharged</span>
             <span className="text-base font-bold text-white">NPR {user?.total_recharge ? user.total_recharge.toFixed(2) : '0.00'}</span>
           </div>
-          <div className="bg-white/10 p-2.5 rounded-xl backdrop-blur-sm">
-            <span className="text-[9px] uppercase tracking-wider text-sky-300 font-semibold block">Total Withdrawn</span>
+          <div className="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+            <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">Total Withdrawn</span>
             <span className="text-base font-bold text-white">NPR {user?.total_withdrawal ? user.total_withdrawal.toFixed(2) : '0.00'}</span>
           </div>
         </div>
       </div>
 
       {/* Account Control Links */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden divide-y divide-slate-100">
+      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden divide-y divide-slate-100">
         <button
           onClick={() => setShowBankModal(true)}
-          className="w-full p-4 flex justify-between items-center hover:bg-slate-50 transition-colors text-left"
+          className="w-full p-4.5 flex justify-between items-center hover:bg-slate-50 transition-colors text-left"
         >
-          <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+          <div className="flex items-center space-x-3.5">
+            <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center">
               <CreditCard className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-xs font-bold text-slate-800">Bank / Wallet Setup</h4>
-              <p className="text-[10px] text-slate-400">
+              <h4 className="text-xs font-black text-slate-900">Bank / Wallet Setup</h4>
+              <p className="text-[11px] text-slate-500 font-medium">
                 {user?.bank_name ? `${user.bank_name} - ${user.account_number}` : 'Configure withdrawal account'}
               </p>
             </div>
@@ -183,15 +184,15 @@ export default function MinePage() {
 
         <Link
           href="/orders"
-          className="w-full p-4 flex justify-between items-center hover:bg-slate-50 transition-colors"
+          className="w-full p-4.5 flex justify-between items-center hover:bg-slate-50 transition-colors"
         >
-          <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+          <div className="flex items-center space-x-3.5">
+            <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center">
               <History className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-xs font-bold text-slate-800">My Active Investments</h4>
-              <p className="text-[10px] text-slate-400">
+              <h4 className="text-xs font-black text-slate-900">My Active Investments</h4>
+              <p className="text-[11px] text-slate-500 font-medium">
                 {user?.activeInvestmentsCount || 0} active plans yielding daily income
               </p>
             </div>
@@ -201,15 +202,15 @@ export default function MinePage() {
 
         <Link
           href="/team"
-          className="w-full p-4 flex justify-between items-center hover:bg-slate-50 transition-colors"
+          className="w-full p-4.5 flex justify-between items-center hover:bg-slate-50 transition-colors"
         >
-          <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+          <div className="flex items-center space-x-3.5">
+            <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center">
               <Users className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-xs font-bold text-slate-800">Invite & Team Management</h4>
-              <p className="text-[10px] text-slate-400">
+              <h4 className="text-xs font-black text-slate-900">Invite & Team Management</h4>
+              <p className="text-[11px] text-slate-500 font-medium">
                 {user?.teamCount || 0} team members registered under your link
               </p>
             </div>
@@ -220,15 +221,15 @@ export default function MinePage() {
         {user?.role === 'admin' && (
           <Link
             href="/admin/dashboard"
-            className="w-full p-4 flex justify-between items-center bg-slate-950 text-white hover:bg-slate-900 transition-colors"
+            className="w-full p-4.5 flex justify-between items-center bg-slate-900 text-white hover:bg-slate-800 transition-colors"
           >
-            <div className="flex items-center space-x-3">
-              <div className="w-9 h-9 rounded-xl bg-blue-500/20 border border-blue-400/40 text-cyan-400 flex items-center justify-center">
+            <div className="flex items-center space-x-3.5">
+              <div className="w-10 h-10 rounded-2xl bg-cyan-500/20 border border-cyan-400/40 text-cyan-400 flex items-center justify-center">
                 <ShieldCheck className="w-5 h-5 text-cyan-400" />
               </div>
               <div>
-                <h4 className="text-xs font-bold text-cyan-400">System Admin Control Center</h4>
-                <p className="text-[10px] text-slate-400">Review pending deposits, payouts, & user balances</p>
+                <h4 className="text-xs font-black text-cyan-400">System Admin Control Center</h4>
+                <p className="text-[11px] text-slate-400">Review pending deposits, payouts, & user balances</p>
               </div>
             </div>
             <ChevronRight className="w-4 h-4 text-cyan-400" />
@@ -237,13 +238,13 @@ export default function MinePage() {
 
         <button
           onClick={handleLogout}
-          className="w-full p-4 flex justify-between items-center hover:bg-rose-50 transition-colors text-rose-600"
+          className="w-full p-4.5 flex justify-between items-center hover:bg-rose-50 transition-colors text-rose-600"
         >
-          <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+          <div className="flex items-center space-x-3.5">
+            <div className="w-10 h-10 rounded-2xl bg-rose-50 border border-rose-100 text-rose-600 flex items-center justify-center">
               <LogOut className="w-5 h-5" />
             </div>
-            <h4 className="text-xs font-bold">Log Out Account</h4>
+            <h4 className="text-xs font-black">Log Out Account</h4>
           </div>
           <ChevronRight className="w-4 h-4 text-rose-400" />
         </button>
@@ -252,11 +253,11 @@ export default function MinePage() {
       {/* Bank Account Edit Modal */}
       {showBankModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl">
+          <div className="bg-white border border-slate-200 rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl text-slate-900">
             <div className="flex justify-between items-center">
               <h3 className="font-black text-slate-900 text-base">Withdrawal Bank Setup</h3>
               <button onClick={() => setShowBankModal(false)} className="text-slate-400 hover:text-slate-700 text-sm font-bold">
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
 
@@ -267,7 +268,7 @@ export default function MinePage() {
                   type="text"
                   required
                   placeholder="eSewa / Khalti / Global IME Bank"
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:outline-none focus:border-blue-500"
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl font-semibold text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white"
                   value={bankForm.bank_name}
                   onChange={(e) => setBankForm({ ...bankForm, bank_name: e.target.value })}
                 />
@@ -279,7 +280,7 @@ export default function MinePage() {
                   type="text"
                   required
                   placeholder="Full name as in Bank/Wallet"
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:outline-none focus:border-blue-500"
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl font-semibold text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white"
                   value={bankForm.account_name}
                   onChange={(e) => setBankForm({ ...bankForm, account_name: e.target.value })}
                 />
@@ -291,7 +292,7 @@ export default function MinePage() {
                   type="text"
                   required
                   placeholder="Account Number or Wallet ID"
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold focus:outline-none focus:border-blue-500 text-slate-900"
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl font-bold text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white"
                   value={bankForm.account_number}
                   onChange={(e) => setBankForm({ ...bankForm, account_number: e.target.value })}
                 />
@@ -300,7 +301,7 @@ export default function MinePage() {
               <button
                 type="submit"
                 disabled={savingBank}
-                className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl shadow-lg shadow-blue-600/30"
+                className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-extrabold rounded-2xl text-xs shadow-lg shadow-blue-600/30 transition-all disabled:opacity-50"
               >
                 {savingBank ? 'Saving...' : 'Save Bank Details'}
               </button>

@@ -5,7 +5,7 @@ import BottomNav from '@/components/BottomNav';
 import ToastContainer from '@/components/Toast';
 
 export const viewport: Viewport = {
-  themeColor: '#020617',
+  themeColor: '#2563eb',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
@@ -107,14 +107,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="bg-slate-950 min-h-screen text-slate-100 antialiased pb-20 md:pb-8 selection:bg-blue-600 selection:text-white">
+      <body className="bg-slate-50 min-h-screen text-slate-900 antialiased pb-20 md:pb-8 selection:bg-blue-600 selection:text-white">
         <ToastContainer />
         <Header />
         <main className="max-w-md md:max-w-7xl mx-auto min-h-[calc(100vh-4rem)]">

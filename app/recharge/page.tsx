@@ -125,16 +125,16 @@ export default function RechargePage() {
   const currentPaymentInfo = getPaymentDetails(paymentMethod);
 
   return (
-    <div className="px-4 py-5 space-y-4 max-w-4xl mx-auto">
+    <div className="px-4 py-6 space-y-5 max-w-4xl mx-auto text-slate-900">
       {/* Header Banner */}
-      <div className="bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 rounded-3xl p-5 text-white shadow-xl border border-slate-800">
+      <div className="bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 rounded-3xl p-6 text-white shadow-xl border border-slate-800">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-bold">
-            <Star className="w-6 h-6 fill-white" />
+          <div className="w-12 h-12 rounded-2xl bg-blue-600/20 text-cyan-400 border border-blue-500/30 flex items-center justify-center font-bold">
+            <Star className="w-6 h-6 fill-cyan-400" />
           </div>
           <div>
-            <h2 className="text-lg font-black text-cyan-400">Wallet Recharge</h2>
-            <p className="text-xs text-sky-200/80">
+            <h2 className="text-lg font-black text-white">Wallet Recharge</h2>
+            <p className="text-xs text-cyan-400 font-semibold">
               Scan QR code & submit deposit request
             </p>
           </div>
@@ -143,164 +143,175 @@ export default function RechargePage() {
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
         {/* Payment QR Box */}
-        <div className="md:col-span-6 bg-white rounded-3xl p-6 border border-slate-200 shadow-sm text-center flex flex-col items-center justify-center space-y-3">
-          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center justify-center">
+        <div className="md:col-span-6 bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm text-center flex flex-col items-center justify-center space-y-4">
+          <h3 className="text-xs font-black text-blue-600 uppercase tracking-wider flex items-center justify-center">
             <QrCode className="w-4 h-4 text-blue-600 mr-1.5" />
             Scan QR Code to Pay ({paymentMethod})
           </h3>
 
-          {/* QR Image preview */}
-          <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 inline-block shadow-inner">
-            <div className="relative w-56 h-56 mx-auto rounded-xl overflow-hidden">
-              <Image
-                src={currentPaymentInfo.qrImage}
-                alt="Payment QR Code"
-                width={240}
-                height={240}
-                className="object-contain w-full h-full"
-              />
-            </div>
+          <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200 shadow-inner relative w-52 h-52">
+            <Image
+              src={currentPaymentInfo.qrImage}
+              alt="Payment Gateway QR Code"
+              fill
+              className="object-contain p-1"
+            />
+          </div>
+
+          <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200/80 w-full text-xs text-slate-600 space-y-1 text-left">
+            <p className="font-extrabold text-slate-900">Official Gateway Instructions:</p>
+            <p className="text-[11px] text-slate-500 leading-relaxed">
+              1. Scan QR code in your eSewa/Khalti/Bank app.<br />
+              2. Transfer exact NPR amount.<br />
+              3. Enter Transaction ID & upload payment receipt.
+            </p>
           </div>
         </div>
 
-        {/* Deposit Form */}
-        <div className="md:col-span-6 bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
-          <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase mb-2">
-              Select Deposit Amount (NPR)
-            </label>
-            <div className="grid grid-cols-3 gap-2">
-              {presetAmounts.map((p) => (
-                <button
-                  key={p}
-                  type="button"
-                  onClick={() => setAmount(p)}
-                  className={`py-2 rounded-xl font-black text-xs transition-all border ${
-                    amount === p
-                      ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-600/30'
-                      : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
-                  }`}
-                >
-                  NPR {p}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
-              Payment Gateway / Channel
-            </label>
-            <div className="grid grid-cols-2 gap-2">
-              {['eSewa', 'Khalti', 'Bank Transfer', 'USDT'].map((m) => (
-                <button
-                  key={m}
-                  type="button"
-                  onClick={() => setPaymentMethod(m)}
-                  className={`py-2 px-3 rounded-xl font-bold text-xs flex items-center justify-between border transition-all ${
-                    paymentMethod === m
-                      ? 'bg-blue-50 border-blue-600 text-blue-900 shadow-sm'
-                      : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
-                  }`}
-                >
-                  <span>{m}</span>
-                  {paymentMethod === m && <CheckCircle2 className="w-4 h-4 text-blue-600" />}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-3 pt-1">
+        {/* Recharge Form */}
+        <div className="md:col-span-6 bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
-                Upload Receipt Screenshot (Optional)
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
+                Select Deposit Channel
               </label>
-              <div className="flex items-center space-x-2">
-                <input
-                  type="file"
-                  accept="image/*"
-                  id="recharge-proof-upload"
-                  className="hidden"
-                  onChange={(e) => {
-                    if (e.target.files?.[0]) handleProofFileUpload(e.target.files[0]);
-                  }}
-                />
-                <label
-                  htmlFor="recharge-proof-upload"
-                  className="cursor-pointer px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl flex items-center space-x-1.5 text-xs border border-slate-200 transition-colors"
-                >
-                  <Upload className="w-4 h-4 text-blue-600" />
-                  <span>{uploadingProof ? 'Uploading Receipt...' : 'Attach Receipt Image'}</span>
-                </label>
-                {proofImageUrl && (
-                  <span className="text-xs font-bold text-blue-600 flex items-center">
-                    <FileCheck className="w-4 h-4 mr-1" />
-                    Attached
-                  </span>
-                )}
+              <div className="grid grid-cols-2 gap-2">
+                {['eSewa', 'Khalti', 'Bank Transfer', 'USDT'].map((method) => (
+                  <button
+                    key={method}
+                    type="button"
+                    onClick={() => setPaymentMethod(method)}
+                    className={`py-2.5 px-3 text-xs font-bold rounded-xl border transition-all ${
+                      paymentMethod === method
+                        ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-600/30'
+                        : 'bg-slate-50 text-slate-600 border-slate-200 hover:border-blue-300 hover:text-slate-900'
+                    }`}
+                  >
+                    {method}
+                  </button>
+                ))}
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
-                Sender Name / Phone (Optional)
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
+                Recharge Amount (NPR)
+              </label>
+              <input
+                type="number"
+                required
+                min="100"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-base font-black text-blue-600 focus:outline-none focus:border-blue-600 focus:bg-white"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+              />
+
+              <div className="grid grid-cols-5 gap-1.5 mt-2">
+                {presetAmounts.map((amt) => (
+                  <button
+                    key={amt}
+                    type="button"
+                    onClick={() => setAmount(amt)}
+                    className="py-1.5 text-[11px] font-bold bg-slate-50 border border-slate-200 text-slate-700 rounded-xl hover:border-blue-600 hover:text-blue-600 transition-all"
+                  >
+                    NPR {amt}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
+                Sender Transaction ID / Mobile ID
               </label>
               <input
                 type="text"
-                placeholder="Your name or phone used for payment"
-                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-blue-500"
+                required
+                placeholder="e.g. TXN98412389123"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-semibold text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white"
                 value={senderInfo}
                 onChange={(e) => setSenderInfo(e.target.value)}
               />
             </div>
 
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
+                Upload Payment Screenshot
+              </label>
+              <div className="flex items-center space-x-3">
+                <label className="flex-1 cursor-pointer bg-slate-50 border border-dashed border-slate-300 hover:border-blue-600 rounded-2xl p-3 text-center transition-all">
+                  <span className="text-xs font-bold text-slate-700 flex items-center justify-center space-x-2">
+                    <Upload className="w-4 h-4 text-blue-600" />
+                    <span>{uploadingProof ? 'Uploading Screenshot...' : proofImageUrl ? 'Change Screenshot' : 'Choose Receipt File'}</span>
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files[0]) {
+                        handleProofFileUpload(e.target.files[0]);
+                      }
+                    }}
+                  />
+                </label>
+              </div>
+
+              {proofImageUrl && (
+                <div className="mt-2 p-2.5 bg-blue-50 border border-blue-200 rounded-xl flex items-center justify-between text-xs text-blue-950 font-bold">
+                  <span className="flex items-center">
+                    <FileCheck className="w-4 h-4 mr-1.5 text-blue-600" />
+                    Receipt Screenshot Attached
+                  </span>
+                  <a href={proofImageUrl} target="_blank" rel="noreferrer" className="underline text-blue-600 hover:text-blue-700">
+                    Preview
+                  </a>
+                </div>
+              )}
+            </div>
+
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl text-xs shadow-lg shadow-blue-600/30 flex items-center justify-center space-x-2 transition-all active:scale-[0.98]"
+              className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-extrabold rounded-2xl shadow-lg shadow-blue-600/30 flex items-center justify-center space-x-2 transition-all disabled:opacity-50"
             >
-              <span>{loading ? 'Submitting Request...' : `Submit Deposit (NPR ${amount})`}</span>
+              <span>{loading ? 'Submitting Deposit...' : 'Submit Deposit Request'}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
         </div>
       </div>
 
-      {/* Deposit History */}
-      <div className="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm space-y-3">
-        <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-          Recharge Request History
+      {/* History */}
+      <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm space-y-4">
+        <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider">
+          Recharge Transaction History
         </h3>
 
         {history.length === 0 ? (
-          <p className="text-xs text-slate-400 text-center py-3">No previous deposit requests.</p>
+          <p className="text-xs text-slate-500 py-4 text-center">No deposit history recorded yet.</p>
         ) : (
-          <div className="divide-y divide-slate-100">
-            {history.map((item) => (
-              <div key={item.id} className="py-2.5 flex justify-between items-center text-xs">
+          <div className="space-y-2">
+            {history.map((tx) => (
+              <div
+                key={tx.id}
+                className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80 flex justify-between items-center text-xs"
+              >
                 <div>
-                  <div className="flex items-center space-x-1.5">
-                    <span className="font-bold text-slate-900">NPR {item.amount.toFixed(2)}</span>
-                    <span className="text-[10px] text-slate-500 font-semibold bg-slate-100 px-2 py-0.5 rounded">
-                      {item.payment_method}
-                    </span>
-                  </div>
-                  <p className="text-[10px] text-slate-400 mt-0.5">{item.payment_details}</p>
+                  <p className="font-extrabold text-slate-900">NPR {tx.amount.toFixed(2)} ({tx.payment_method})</p>
+                  <p className="text-[10px] text-slate-500 font-medium">{new Date(tx.created_at).toLocaleString()}</p>
                 </div>
 
                 <span
-                  className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase flex items-center ${
-                    item.status === 'approved'
-                      ? 'bg-blue-50 text-blue-700'
-                      : item.status === 'rejected'
-                      ? 'bg-rose-100 text-rose-700'
-                      : 'bg-amber-100 text-amber-700'
+                  className={`text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider ${
+                    tx.status === 'approved' || tx.status === 'completed'
+                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                      : tx.status === 'pending'
+                      ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                      : 'bg-rose-50 text-rose-700 border border-rose-200'
                   }`}
                 >
-                  {item.status === 'approved' && <CheckCircle2 className="w-3 h-3 mr-1" />}
-                  {item.status === 'rejected' && <XCircle className="w-3 h-3 mr-1" />}
-                  {item.status === 'pending' && <Clock className="w-3 h-3 mr-1" />}
-                  {item.status}
+                  {tx.status}
                 </span>
               </div>
             ))}

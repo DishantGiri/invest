@@ -370,11 +370,11 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex space-x-1 bg-slate-200 p-1.5 rounded-2xl text-xs font-bold overflow-x-auto">
+      <div className="flex space-x-1 bg-white p-1.5 rounded-2xl text-xs font-bold overflow-x-auto border border-slate-200 shadow-sm">
         <button
           onClick={() => setActiveTab('overview')}
           className={`flex-1 py-2.5 px-4 rounded-xl whitespace-nowrap transition-all ${
-            activeTab === 'overview' ? 'bg-slate-900 text-cyan-400 shadow' : 'text-slate-600 hover:text-slate-900'
+            activeTab === 'overview' ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
           Overview
@@ -382,7 +382,7 @@ export default function AdminDashboardPage() {
         <button
           onClick={() => setActiveTab('recharges')}
           className={`flex-1 py-2.5 px-4 rounded-xl whitespace-nowrap transition-all flex items-center justify-center ${
-            activeTab === 'recharges' ? 'bg-slate-900 text-cyan-400 shadow' : 'text-slate-600 hover:text-slate-900'
+            activeTab === 'recharges' ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
           Recharges
@@ -395,7 +395,7 @@ export default function AdminDashboardPage() {
         <button
           onClick={() => setActiveTab('withdrawals')}
           className={`flex-1 py-2.5 px-4 rounded-xl whitespace-nowrap transition-all flex items-center justify-center ${
-            activeTab === 'withdrawals' ? 'bg-slate-900 text-cyan-400 shadow' : 'text-slate-600 hover:text-slate-900'
+            activeTab === 'withdrawals' ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
           Withdrawals
@@ -408,7 +408,7 @@ export default function AdminDashboardPage() {
         <button
           onClick={() => setActiveTab('users')}
           className={`flex-1 py-2.5 px-4 rounded-xl whitespace-nowrap transition-all ${
-            activeTab === 'users' ? 'bg-slate-900 text-cyan-400 shadow' : 'text-slate-600 hover:text-slate-900'
+            activeTab === 'users' ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
           Users
@@ -416,7 +416,7 @@ export default function AdminDashboardPage() {
         <button
           onClick={() => setActiveTab('plans')}
           className={`flex-1 py-2.5 px-4 rounded-xl whitespace-nowrap transition-all ${
-            activeTab === 'plans' ? 'bg-slate-900 text-cyan-400 shadow' : 'text-slate-600 hover:text-slate-900'
+            activeTab === 'plans' ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
           Plans
@@ -424,7 +424,7 @@ export default function AdminDashboardPage() {
         <button
           onClick={() => setActiveTab('settings')}
           className={`flex-1 py-2.5 px-4 rounded-xl whitespace-nowrap transition-all flex items-center justify-center ${
-            activeTab === 'settings' ? 'bg-blue-600 text-white shadow' : 'text-slate-700 hover:text-slate-900 font-black'
+            activeTab === 'settings' ? 'bg-blue-600 text-white font-black shadow-md shadow-blue-600/30' : 'text-blue-600 hover:text-blue-700 hover:bg-blue-50 font-bold'
           }`}
         >
           <Sliders className="w-3.5 h-3.5 mr-1" />
@@ -436,22 +436,22 @@ export default function AdminDashboardPage() {
       {activeTab === 'overview' && stats && (
         <div className="space-y-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
-            <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm">
+            <div className="bg-white p-5 rounded-3xl border border-slate-200/90 shadow-sm">
               <span className="text-[10px] text-slate-400 font-bold uppercase">Total Registered Users</span>
               <p className="text-2xl font-black text-slate-900 mt-1">{stats.totalUsers}</p>
             </div>
-            <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm">
+            <div className="bg-white p-5 rounded-3xl border border-slate-200/90 shadow-sm">
               <span className="text-[10px] text-slate-400 font-bold uppercase">Total User Balances</span>
               <p className="text-2xl font-black text-blue-600 mt-1">NPR {stats.totalUserBalance.toFixed(2)}</p>
             </div>
-            <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm">
+            <div className="bg-white p-5 rounded-3xl border border-slate-200/90 shadow-sm">
               <span className="text-[10px] text-slate-400 font-bold uppercase">Active Investments</span>
               <p className="text-2xl font-black text-slate-900 mt-1">{stats.totalInvestmentsCount}</p>
-              <p className="text-[10px] text-slate-500 font-semibold">Vol: NPR {stats.totalInvestedAmount.toFixed(2)}</p>
+              <p className="text-[10px] text-blue-600 font-semibold">Vol: NPR {stats.totalInvestedAmount.toFixed(2)}</p>
             </div>
-            <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm">
-              <span className="text-[10px] text-slate-400 font-bold uppercase">Pending Deposits</span>
-              <p className="text-2xl font-black text-rose-600 mt-1">{stats.pendingRechargesCount}</p>
+            <div className="bg-white p-5 rounded-3xl border border-slate-200/90 shadow-sm">
+              <span className="text-[10px] text-slate-400 font-bold uppercase">Pending Recharges</span>
+              <p className="text-2xl font-black text-amber-600 mt-1">{stats.pendingRechargesCount}</p>
               <p className="text-[10px] text-slate-500 font-semibold">Val: NPR {stats.pendingRechargesAmount.toFixed(2)}</p>
             </div>
           </div>
@@ -582,18 +582,18 @@ export default function AdminDashboardPage() {
 
           <form onSubmit={handleSaveSettings} className="space-y-6">
           {/* Referral Commission Control Box */}
-          <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
-            <h3 className="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center">
-              <Percent className="w-5 h-5 text-blue-600 mr-2" />
+          <div className="bg-slate-900/90 p-6 rounded-3xl border border-slate-800 shadow-xl space-y-4">
+            <h3 className="text-sm font-black text-white uppercase tracking-wider flex items-center">
+              <Percent className="w-5 h-5 text-cyan-400 mr-2" />
               Referral Commission Percentage Settings
             </h3>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-400">
               Admin can configure the exact referral percentage earned on user investment plan subscriptions.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
+                <label className="block text-xs font-bold text-slate-300 uppercase mb-1">
                   Tier 1 Direct Referral Commission (%)
                 </label>
                 <input
@@ -602,14 +602,14 @@ export default function AdminDashboardPage() {
                   min="0"
                   max="100"
                   required
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-black text-blue-600"
+                  className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-2xl text-sm font-black text-cyan-400"
                   value={settings.tier1_referral_percent || '10'}
                   onChange={(e) => setSettings({ ...settings, tier1_referral_percent: e.target.value })}
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
+                <label className="block text-xs font-bold text-slate-300 uppercase mb-1">
                   Tier 2 Indirect Referral Commission (%)
                 </label>
                 <input
@@ -618,7 +618,7 @@ export default function AdminDashboardPage() {
                   min="0"
                   max="100"
                   required
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-black text-blue-600"
+                  className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-2xl text-sm font-black text-cyan-400"
                   value={settings.tier2_referral_percent || '3'}
                   onChange={(e) => setSettings({ ...settings, tier2_referral_percent: e.target.value })}
                 />
@@ -627,12 +627,12 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* Payment Account Details & File Upload for Payment QR */}
-          <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
-            <h3 className="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center">
-              <QrCode className="w-5 h-5 text-blue-600 mr-2" />
+          <div className="bg-slate-900/90 p-6 rounded-3xl border border-slate-800 shadow-xl space-y-4">
+            <h3 className="text-sm font-black text-white uppercase tracking-wider flex items-center">
+              <QrCode className="w-5 h-5 text-cyan-400 mr-2" />
               Payment Accounts & Direct Image Upload for QR Codes
             </h3>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-400">
               Upload custom QR Code images for eSewa, Khalti, Bank Transfer, and USDT payment gateways.
             </p>
 
@@ -805,7 +805,7 @@ export default function AdminDashboardPage() {
           ) : (
             <div className="space-y-3">
               {recharges.map((r) => (
-                <div key={r.id} className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2 text-xs">
+                <div key={r.id} className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm text-slate-900 space-y-2 text-xs">
                   <div className="flex justify-between items-start">
                     <div>
                       <p className="font-bold text-slate-900">{r.full_name} ({r.phone_or_email})</p>
@@ -814,7 +814,7 @@ export default function AdminDashboardPage() {
                     <span className="text-sm font-black text-blue-600">NPR {r.amount.toFixed(2)}</span>
                   </div>
 
-                  <div className="bg-slate-50 p-2.5 rounded-xl font-mono text-[11px] text-slate-700">
+                  <div className="bg-slate-950 p-2.5 rounded-xl font-mono text-[11px] text-slate-300 border border-slate-800">
                     <span className="font-bold text-slate-900">{r.payment_method}:</span> {r.payment_details}
                   </div>
 
@@ -860,7 +860,7 @@ export default function AdminDashboardPage() {
           ) : (
             <div className="space-y-3">
               {withdrawals.map((w) => (
-                <div key={w.id} className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2 text-xs">
+                <div key={w.id} className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm text-slate-900 space-y-2 text-xs">
                   <div className="flex justify-between items-start">
                     <div>
                       <p className="font-bold text-slate-900">{w.full_name} ({w.phone_or_email})</p>
@@ -869,7 +869,7 @@ export default function AdminDashboardPage() {
                     <span className="text-sm font-black text-orange-600">NPR {w.amount.toFixed(2)}</span>
                   </div>
 
-                  <div className="bg-slate-50 p-2.5 rounded-xl font-mono text-[11px] text-slate-700">
+                  <div className="bg-slate-950 p-2.5 rounded-xl font-mono text-[11px] text-slate-300 border border-slate-800">
                     <span className="font-bold text-slate-900">Destination:</span> {w.payment_details}
                   </div>
 
@@ -912,7 +912,7 @@ export default function AdminDashboardPage() {
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {users.map((u) => (
-              <div key={u.id} className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center text-xs">
+              <div key={u.id} className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm text-slate-900 flex justify-between items-center text-xs">
                 <div>
                   <div className="flex items-center space-x-1.5">
                     <span className="font-bold text-slate-900 text-sm">{u.full_name || 'Member'}</span>
@@ -953,7 +953,7 @@ export default function AdminDashboardPage() {
                 setPlanForm({ id: '', name: '', price: '', daily_income: '', duration_days: '150', vip_level: '1', badge_text: 'VIP 1' });
                 setShowPlanModal(true);
               }}
-              className="py-2 px-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl text-xs flex items-center"
+              className="py-2 px-3.5 bg-blue-600 hover:bg-blue-500 text-slate-900 font-bold rounded-xl text-xs flex items-center"
             >
               <Plus className="w-4 h-4 mr-1" />
               Add Plan
@@ -962,7 +962,7 @@ export default function AdminDashboardPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {plans.map((p) => (
-              <div key={p.id} className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2 text-xs">
+              <div key={p.id} className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm text-slate-900 space-y-2 text-xs">
                 <div className="flex justify-between items-center">
                   <div>
                     <h4 className="font-bold text-slate-900">{p.name}</h4>

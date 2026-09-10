@@ -6,19 +6,26 @@ import pg from 'pg';
 pg.types.setTypeParser(1700, (val: string) => parseFloat(val));
 pg.types.setTypeParser(20, (val: string) => parseInt(val, 10));
 
-const connectionString =
-  process.env.POSTGRES_URL ||
-  process.env.DATABASE_URL ||
-  'postgres://postgres:postgres@localhost:5432/catl_invest';
+let poolInstance: Pool | null = null;
 
-const isSupabase = connectionString.includes('supabase.co') || connectionString.includes('supabase.com');
+export function getPool(): Pool {
+  if (!poolInstance) {
+    const connectionString =
+      process.env.POSTGRES_URL ||
+      process.env.DATABASE_URL ||
+      'postgres://postgres:postgres@localhost:5432/catl_invest';
 
-const pool = new Pool({
-  connectionString,
-  ssl: isSupabase || (process.env.NODE_ENV === 'production' && !connectionString.includes('localhost'))
-    ? { rejectUnauthorized: false }
-    : false
-});
+    const isSupabase = connectionString.includes('supabase.co') || connectionString.includes('supabase.com');
+
+    poolInstance = new Pool({
+      connectionString,
+      ssl: isSupabase || (process.env.NODE_ENV === 'production' && !connectionString.includes('localhost'))
+        ? { rejectUnauthorized: false }
+        : false
+    });
+  }
+  return poolInstance;
+}
 
 /**
  * Helper to convert SQLite style ? placeholders to PostgreSQL $1, $2, ...
@@ -34,7 +41,7 @@ export function convertPlaceholders(sql: string): string {
 export async function query<T = any>(sql: string, params: any[] = []): Promise<T[]> {
   await initDb();
   const pgSql = convertPlaceholders(sql);
-  const res = await pool.query(pgSql, params);
+  const res = await getPool().query(pgSql, params);
   return res.rows as T[];
 }
 
@@ -52,7 +59,7 @@ export async function queryOne<T = any>(sql: string, params: any[] = []): Promis
 export async function execute(sql: string, params: any[] = []): Promise<{ rowCount: number }> {
   await initDb();
   const pgSql = convertPlaceholders(sql);
-  const res = await pool.query(pgSql, params);
+  const res = await getPool().query(pgSql, params);
   return { rowCount: res.rowCount || 0 };
 }
 
@@ -61,7 +68,7 @@ export async function execute(sql: string, params: any[] = []): Promise<{ rowCou
  */
 export async function withTransaction<T>(callback: (client: PoolClient) => Promise<T>): Promise<T> {
   await initDb();
-  const client = await pool.connect();
+  const client = await getPool().connect();
   try {
     await client.query('BEGIN');
     const result = await callback(client);
@@ -81,7 +88,7 @@ export async function initDb() {
   if (isInitialized) return;
   try {
     // Users table
-    await pool.query(`
+    await getPool().query(`
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         phone_or_email TEXT UNIQUE NOT NULL,
@@ -102,7 +109,7 @@ export async function initDb() {
     `);
 
     // System Settings table
-    await pool.query(`
+    await getPool().query(`
       CREATE TABLE IF NOT EXISTS system_settings (
         key TEXT PRIMARY KEY,
         value TEXT NOT NULL
@@ -110,7 +117,7 @@ export async function initDb() {
     `);
 
     // Investment Plans table
-    await pool.query(`
+    await getPool().query(`
       CREATE TABLE IF NOT EXISTS investment_plans (
         id SERIAL PRIMARY KEY,
         name TEXT NOT NULL,
@@ -126,7 +133,7 @@ export async function initDb() {
     `);
 
     // User Investments table
-    await pool.query(`
+    await getPool().query(`
       CREATE TABLE IF NOT EXISTS user_investments (
         id SERIAL PRIMARY KEY,
         user_id INTEGER NOT NULL REFERENCES users(id),
@@ -145,7 +152,7 @@ export async function initDb() {
     `);
 
     // Transactions table
-    await pool.query(`
+    await getPool().query(`
       CREATE TABLE IF NOT EXISTS transactions (
         id SERIAL PRIMARY KEY,
         user_id INTEGER NOT NULL REFERENCES users(id),
@@ -160,7 +167,7 @@ export async function initDb() {
     `);
 
     // Referral Commissions table
-    await pool.query(`
+    await getPool().query(`
       CREATE TABLE IF NOT EXISTS referral_commissions (
         id SERIAL PRIMARY KEY,
         referrer_id INTEGER NOT NULL REFERENCES users(id),
@@ -172,7 +179,7 @@ export async function initDb() {
     `);
 
     // Gift Codes table
-    await pool.query(`
+    await getPool().query(`
       CREATE TABLE IF NOT EXISTS gift_codes (
         id SERIAL PRIMARY KEY,
         code TEXT UNIQUE NOT NULL,
@@ -184,7 +191,7 @@ export async function initDb() {
     `);
 
     // User Gift Claims table
-    await pool.query(`
+    await getPool().query(`
       CREATE TABLE IF NOT EXISTS user_gift_claims (
         id SERIAL PRIMARY KEY,
         user_id INTEGER NOT NULL REFERENCES users(id),
@@ -213,17 +220,17 @@ export async function initDb() {
     };
 
     for (const [key, value] of Object.entries(defaultSettings)) {
-      await pool.query(
+      await getPool().query(
         'INSERT INTO system_settings (key, value) VALUES ($1, $2) ON CONFLICT (key) DO NOTHING',
         [key, value]
       );
     }
 
     // Seed default Admin Account if not existing
-    const adminRes = await pool.query("SELECT * FROM users WHERE role = 'admin'");
+    const adminRes = await getPool().query("SELECT * FROM users WHERE role = 'admin'");
     if (adminRes.rowCount === 0) {
       const adminPasswordHash = bcrypt.hashSync('admin123', 10);
-      await pool.query(
+      await getPool().query(
         `INSERT INTO users (phone_or_email, full_name, password_hash, role, referral_code, balance)
          VALUES ($1, $2, $3, 'admin', 'CATLADMIN', 50000.00)
          ON CONFLICT (phone_or_email) DO NOTHING`,
@@ -232,7 +239,7 @@ export async function initDb() {
     }
 
     // Seed initial CATL investment plans if table is empty
-    const planCountRes = await pool.query('SELECT COUNT(*) as count FROM investment_plans');
+    const planCountRes = await getPool().query('SELECT COUNT(*) as count FROM investment_plans');
     const planCount = parseInt(planCountRes.rows[0].count, 10);
     if (planCount === 0) {
       const defaultPlans = [
@@ -244,7 +251,7 @@ export async function initDb() {
       ];
 
       for (const p of defaultPlans) {
-        await pool.query(
+        await getPool().query(
           `INSERT INTO investment_plans (name, price, daily_income, total_revenue, duration_days, vip_level, badge_text)
            VALUES ($1, $2, $3, $4, $5, $6, $7)`,
           [p.name, p.price, p.daily_income, p.total_revenue, p.duration_days, p.vip_level, p.badge_text]
@@ -253,10 +260,10 @@ export async function initDb() {
     }
 
     // Seed sample gift code
-    const giftCountRes = await pool.query('SELECT COUNT(*) as count FROM gift_codes');
+    const giftCountRes = await getPool().query('SELECT COUNT(*) as count FROM gift_codes');
     const giftCount = parseInt(giftCountRes.rows[0].count, 10);
     if (giftCount === 0) {
-      await pool.query(
+      await getPool().query(
         `INSERT INTO gift_codes (code, amount, max_uses)
          VALUES ('CATL2026', 150.00, 500)
          ON CONFLICT (code) DO NOTHING`
@@ -281,10 +288,10 @@ export async function getSystemSettings(): Promise<Record<string, string>> {
 
 export async function updateSystemSetting(key: string, value: string): Promise<void> {
   await initDb();
-  await pool.query(
+  await getPool().query(
     'INSERT INTO system_settings (key, value) VALUES ($1, $2) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value',
     [key, value]
   );
 }
 
-export default pool;
+export default getPool;

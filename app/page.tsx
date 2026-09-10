@@ -18,7 +18,9 @@ import {
   Sparkles,
   ChevronRight,
   TrendingUp,
-  Cpu
+  Cpu,
+  Activity,
+  Award
 } from 'lucide-react';
 import { showToast } from '@/components/Toast';
 
@@ -99,7 +101,6 @@ export default function HomePage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ plan_id: selectedPlan.id })
       });
-
       const data = await res.json();
 
       if (!res.ok) {
@@ -111,9 +112,8 @@ export default function HomePage() {
       showToast(data.message, 'success');
       setSelectedPlan(null);
       fetchUserData();
-      router.push('/orders');
     } catch {
-      showToast('Investment transaction failed', 'error');
+      showToast('Network error during investment', 'error');
     } finally {
       setInvesting(false);
     }
@@ -121,7 +121,7 @@ export default function HomePage() {
 
   const handleClaimGift = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!giftCode.trim()) return;
+    if (!giftCode) return;
     setClaimingGift(true);
 
     try {
@@ -152,34 +152,31 @@ export default function HomePage() {
   if (loading) {
     return (
       <div className="p-4 md:p-8 space-y-4 animate-pulse">
-        <div className="h-48 bg-slate-900/20 rounded-3xl" />
+        <div className="h-48 bg-slate-200 rounded-3xl" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="h-44 bg-white rounded-2xl" />
-          <div className="h-44 bg-white rounded-2xl" />
-          <div className="h-44 bg-white rounded-2xl" />
+          <div className="h-44 bg-white rounded-2xl border border-slate-200" />
+          <div className="h-44 bg-white rounded-2xl border border-slate-200" />
+          <div className="h-44 bg-white rounded-2xl border border-slate-200" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 pb-8 px-4 md:px-0">
-      {/* Top Banner & Wallet Hero matching PC + Mobile Responsive Design */}
-      <div className="bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 pt-6 pb-12 px-5 md:px-8 rounded-b-[2rem] md:rounded-3xl text-white shadow-2xl relative overflow-hidden border border-slate-800">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
-
+    <div className="space-y-6 pb-8 px-4 md:px-0 text-slate-900">
+      {/* Top Banner & Wallet Hero */}
+      <div className="bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 pt-6 pb-12 px-5 md:px-8 rounded-b-[2rem] md:rounded-3xl text-white shadow-xl relative overflow-hidden border border-slate-800">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 items-center relative z-10">
           {/* User Info / Branding */}
           <div className="md:col-span-6 space-y-3">
             <div className="flex items-center space-x-3">
-              <div className="w-14 h-14 rounded-2xl bg-blue-500/20 border border-blue-400/30 p-1 flex items-center justify-center shadow-lg shadow-blue-500/20">
+              <div className="w-14 h-14 rounded-2xl bg-slate-900 border border-slate-800 p-1.5 flex items-center justify-center shadow-md">
                 <Image
-                  src="/catl_logo.png"
+                  src="/catl_logo_transparent.png"
                   alt="CATL Tech Logo"
                   width={56}
                   height={56}
-                  className="object-cover rounded-xl w-full h-full"
+                  className="object-contain w-full h-full"
                 />
               </div>
               <div>
@@ -187,24 +184,24 @@ export default function HomePage() {
                   <h2 className="text-lg font-black text-white">
                     {user?.full_name || 'CATL Investor'}
                   </h2>
-                  <span className="bg-blue-500/20 text-cyan-300 border border-blue-400/30 text-[10px] font-extrabold px-2 py-0.5 rounded-full">
-                    VIP 1
+                  <span className="bg-blue-600/30 text-cyan-300 border border-blue-500/40 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                    VIP 1 Member
                   </span>
                 </div>
-                <p className="text-xs text-sky-300 font-medium">
+                <p className="text-xs text-sky-300 font-semibold">
                   {user?.phone_or_email}
                 </p>
               </div>
             </div>
-            <p className="text-xs text-slate-300 hidden md:block max-w-md">
+            <p className="text-xs text-slate-300 hidden md:block max-w-md leading-relaxed">
               Welcome to Contemporary Amperex Technology Co. Limited (CATL). Invest in clean energy battery storage matrix and earn guaranteed daily interest payouts.
             </p>
           </div>
 
           {/* Wallet Balance Box */}
-          <div className="md:col-span-6 bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-6 text-center shadow-inner space-y-3">
-            <p className="text-xs font-bold tracking-widest text-sky-300 uppercase">
-              WALLET BALANCE
+          <div className="md:col-span-6 bg-slate-900/90 backdrop-blur-md border border-slate-800 rounded-3xl p-6 text-center shadow-xl space-y-3">
+            <p className="text-[11px] font-extrabold tracking-widest text-cyan-400 uppercase">
+              AVAILABLE WALLET BALANCE
             </p>
             <div className="text-3xl md:text-4xl font-black tracking-tight text-white">
               NPR {user?.balance !== undefined ? user.balance.toFixed(2) : '0.00'}
@@ -214,7 +211,7 @@ export default function HomePage() {
             <div className="grid grid-cols-2 gap-3 max-w-xs mx-auto pt-1">
               <Link
                 href="/recharge"
-                className="py-3 px-4 bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-black rounded-xl text-xs flex items-center justify-center space-x-1.5 shadow-lg shadow-blue-600/30 transition-all"
+                className="py-3 px-4 bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-extrabold rounded-xl text-xs flex items-center justify-center space-x-1.5 shadow-lg shadow-blue-600/30 transition-all"
               >
                 <Star className="w-4 h-4 fill-white" />
                 <span>Recharge</span>
@@ -222,7 +219,7 @@ export default function HomePage() {
 
               <Link
                 href="/withdraw"
-                className="py-3 px-4 bg-orange-600 hover:bg-orange-500 active:scale-95 text-white font-black rounded-xl text-xs flex items-center justify-center space-x-1.5 shadow-lg shadow-orange-600/30 transition-all"
+                className="py-3 px-4 bg-cyan-600 hover:bg-cyan-500 active:scale-95 text-white font-extrabold rounded-xl text-xs flex items-center justify-center space-x-1.5 shadow-lg shadow-cyan-600/30 transition-all"
               >
                 <ShoppingCart className="w-4 h-4" />
                 <span>Withdraw</span>
@@ -232,14 +229,14 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Action Quick Grid Bar */}
+      {/* Quick Actions Grid */}
       <div className="-mt-8 md:mt-0 relative z-20 max-w-6xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-xl p-3 md:p-4 border border-slate-200 grid grid-cols-4 gap-2 text-center">
+        <div className="bg-white rounded-2xl shadow-lg shadow-slate-200/60 p-3 md:p-4 border border-slate-200/90 grid grid-cols-4 gap-2 text-center">
           <Link
             href="/recharge"
             className="flex flex-col items-center p-2 rounded-xl hover:bg-slate-50 transition-all group"
           >
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-sm border border-blue-100">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-sm">
               <Star className="w-6 h-6 fill-blue-600" />
             </div>
             <span className="text-xs font-bold text-slate-800">Recharge</span>
@@ -249,7 +246,7 @@ export default function HomePage() {
             href="/withdraw"
             className="flex flex-col items-center p-2 rounded-xl hover:bg-slate-50 transition-all group"
           >
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-sm border border-blue-100">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-sm">
               <ArrowUpRight className="w-6 h-6" />
             </div>
             <span className="text-xs font-bold text-slate-800">Withdraw</span>
@@ -259,7 +256,7 @@ export default function HomePage() {
             href="/team"
             className="flex flex-col items-center p-2 rounded-xl hover:bg-slate-50 transition-all group"
           >
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-sm border border-blue-100">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-sm">
               <Users className="w-6 h-6" />
             </div>
             <span className="text-xs font-bold text-slate-800">Invite</span>
@@ -269,7 +266,7 @@ export default function HomePage() {
             onClick={() => setShowGiftModal(true)}
             className="flex flex-col items-center p-2 rounded-xl hover:bg-slate-50 transition-all group"
           >
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-sm border border-blue-100">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-sm">
               <Gift className="w-6 h-6" />
             </div>
             <span className="text-xs font-bold text-slate-800">Gift Code</span>
@@ -277,28 +274,28 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Investment Plans Section with PC Multi-column Grid */}
+      {/* Investment Plans Section */}
       <div className="max-w-6xl mx-auto space-y-4">
         <div className="flex justify-between items-center px-1">
           <h3 className="text-base font-black text-slate-900 tracking-tight flex items-center">
             <Zap className="w-5 h-5 text-blue-600 mr-2 fill-blue-600" />
             CATL Battery Investment Plans
           </h3>
-          <span className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+          <span className="text-xs font-extrabold text-blue-700 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
             Daily Auto Income
           </span>
         </div>
 
-        {/* Responsive Grid: 1 column on mobile, 2 columns on tablet, 3 columns on PC desktop */}
+        {/* Responsive Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {plans.map((plan) => (
             <div
               key={plan.id}
-              className="bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group"
+              className="bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-blue-300 transition-all duration-300 flex flex-col justify-between overflow-hidden group"
             >
               <div>
                 {/* Plan Header */}
-                <div className="p-4 border-b border-slate-100 flex justify-between items-center">
+                <div className="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
                   <div className="flex items-center space-x-3">
                     <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center group-hover:scale-105 transition-transform">
                       <Cpu className="w-6 h-6 text-blue-600" />
@@ -313,7 +310,7 @@ export default function HomePage() {
                     </div>
                   </div>
 
-                  <span className="bg-blue-600 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-lg uppercase tracking-wider">
+                  <span className="bg-blue-600 text-white text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-sm">
                     {plan.badge_text || `VIP ${plan.vip_level}`}
                   </span>
                 </div>
@@ -322,15 +319,15 @@ export default function HomePage() {
                 <div className="bg-slate-50/80 p-4 grid grid-cols-3 gap-2 text-center text-xs">
                   <div>
                     <p className="text-[10px] font-bold text-slate-400 uppercase">Daily Income</p>
-                    <p className="font-extrabold text-blue-600 mt-0.5">NPR {plan.daily_income.toFixed(2)}</p>
+                    <p className="font-black text-blue-600 mt-0.5">NPR {plan.daily_income.toFixed(2)}</p>
                   </div>
                   <div>
                     <p className="text-[10px] font-bold text-slate-400 uppercase">Total Revenue</p>
-                    <p className="font-extrabold text-slate-800 mt-0.5">NPR {plan.total_revenue.toFixed(2)}</p>
+                    <p className="font-black text-slate-900 mt-0.5">NPR {plan.total_revenue.toFixed(2)}</p>
                   </div>
                   <div>
                     <p className="text-[10px] font-bold text-slate-400 uppercase">Cycle</p>
-                    <p className="font-extrabold text-slate-800 mt-0.5">{plan.duration_days} Days</p>
+                    <p className="font-bold text-slate-800 mt-0.5">{plan.duration_days} Days</p>
                   </div>
                 </div>
               </div>
@@ -339,7 +336,7 @@ export default function HomePage() {
               <div className="p-4 bg-white border-t border-slate-100">
                 <button
                   onClick={() => setSelectedPlan(plan)}
-                  className="w-full py-3 bg-blue-600 hover:bg-blue-500 active:scale-[0.99] text-white font-bold rounded-2xl text-xs flex items-center justify-center space-x-1.5 shadow-lg shadow-blue-600/20 transition-all"
+                  className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 active:scale-[0.99] text-white font-extrabold rounded-2xl text-xs flex items-center justify-center space-x-1.5 shadow-lg shadow-blue-600/25 transition-all"
                 >
                   <Zap className="w-4 h-4 fill-white" />
                   <span>Invest Now</span>
@@ -353,10 +350,10 @@ export default function HomePage() {
       {/* Confirmation Modal */}
       {selectedPlan && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-slate-200 text-slate-900">
             <div className="flex justify-between items-center">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100">
                   <Zap className="w-4 h-4 fill-blue-600" />
                 </div>
                 <h3 className="font-black text-slate-900 text-base">Confirm Investment</h3>
@@ -369,66 +366,39 @@ export default function HomePage() {
               </button>
             </div>
 
-            <div className="bg-slate-50 p-4 rounded-2xl space-y-2 text-xs">
+            <div className="bg-slate-50 p-4 rounded-2xl space-y-2 text-xs border border-slate-200">
               <div className="flex justify-between">
-                <span className="text-slate-500">Plan Name:</span>
-                <span className="font-bold text-slate-800">{selectedPlan.name}</span>
+                <span className="text-slate-500 font-semibold">Plan Name:</span>
+                <span className="font-black text-slate-900">{selectedPlan.name}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Investment Amount:</span>
-                <span className="font-bold text-blue-600">NPR {selectedPlan.price.toFixed(2)}</span>
+                <span className="text-slate-500 font-semibold">Investment Price:</span>
+                <span className="font-black text-blue-600">NPR {selectedPlan.price.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Daily Return:</span>
-                <span className="font-bold text-blue-600">NPR {selectedPlan.daily_income.toFixed(2)} / day</span>
+                <span className="text-slate-500 font-semibold">Daily Auto Return:</span>
+                <span className="font-bold text-blue-700">NPR {selectedPlan.daily_income.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Total Expected Profit:</span>
-                <span className="font-bold text-slate-800">NPR {selectedPlan.total_revenue.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500">Cycle Duration:</span>
+                <span className="text-slate-500 font-semibold">Duration:</span>
                 <span className="font-bold text-slate-800">{selectedPlan.duration_days} Days</span>
               </div>
-              <hr className="border-slate-200 my-2" />
-              <div className="flex justify-between font-bold text-sm">
-                <span className="text-slate-700">Your Current Balance:</span>
-                <span className={(user?.balance || 0) >= selectedPlan.price ? 'text-blue-600' : 'text-rose-600'}>
-                  NPR {user?.balance !== undefined ? user.balance.toFixed(2) : '0.00'}
-                </span>
-              </div>
             </div>
-
-            {(user?.balance || 0) < selectedPlan.price && (
-              <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-xs font-semibold">
-                Insufficient balance! Please recharge your account first.
-              </div>
-            )}
 
             <div className="flex space-x-3 pt-2">
               <button
                 onClick={() => setSelectedPlan(null)}
-                className="flex-1 py-3 bg-slate-100 text-slate-700 font-bold rounded-xl text-xs hover:bg-slate-200"
+                className="w-1/2 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-2xl text-xs transition-all"
               >
                 Cancel
               </button>
-              {(user?.balance || 0) >= selectedPlan.price ? (
-                <button
-                  onClick={handleInvest}
-                  disabled={investing}
-                  className="flex-1 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl text-xs shadow-lg shadow-blue-600/30 flex items-center justify-center space-x-1"
-                >
-                  <span>{investing ? 'Processing...' : 'Confirm & Invest'}</span>
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              ) : (
-                <Link
-                  href="/recharge"
-                  className="flex-1 py-3 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-xl text-xs text-center flex items-center justify-center shadow-lg shadow-orange-600/30"
-                >
-                  Recharge Now
-                </Link>
-              )}
+              <button
+                onClick={handleInvest}
+                disabled={investing}
+                className="w-1/2 py-3 bg-blue-600 hover:bg-blue-500 text-white font-extrabold rounded-2xl text-xs shadow-lg shadow-blue-600/30 flex items-center justify-center space-x-1 transition-all disabled:opacity-50"
+              >
+                {investing ? 'Processing...' : 'Confirm & Activate'}
+              </button>
             </div>
           </div>
         </div>
@@ -437,10 +407,10 @@ export default function HomePage() {
       {/* Gift Code Modal */}
       {showGiftModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-slate-200 text-slate-900">
             <div className="flex justify-between items-center">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100">
                   <Gift className="w-4 h-4" />
                 </div>
                 <h3 className="font-black text-slate-900 text-base">Redeem Gift Code</h3>
@@ -453,24 +423,25 @@ export default function HomePage() {
               </button>
             </div>
 
-            <form onSubmit={handleClaimGift} className="space-y-3">
-              <p className="text-xs text-slate-600">
-                Enter your promo gift code below (Try: <code className="font-bold text-blue-600">CATL2026</code>)
-              </p>
-
-              <input
-                type="text"
-                required
-                placeholder="Enter Gift Code (e.g. CATL2026)"
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold uppercase tracking-wider focus:outline-none focus:border-blue-500"
-                value={giftCode}
-                onChange={(e) => setGiftCode(e.target.value.toUpperCase())}
-              />
+            <form onSubmit={handleClaimGift} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">
+                  Enter Gift Code
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. CATL2026"
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl font-bold uppercase text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white"
+                  value={giftCode}
+                  onChange={(e) => setGiftCode(e.target.value.toUpperCase())}
+                />
+              </div>
 
               <button
                 type="submit"
                 disabled={claimingGift}
-                className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl text-xs shadow-lg shadow-blue-600/30 flex items-center justify-center space-x-1"
+                className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-extrabold rounded-2xl text-xs shadow-lg shadow-blue-600/30 flex items-center justify-center space-x-1.5 transition-all disabled:opacity-50"
               >
                 <span>{claimingGift ? 'Redeeming...' : 'Claim Gift Bonus'}</span>
               </button>
