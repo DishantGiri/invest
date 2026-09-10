@@ -11,8 +11,8 @@ export default function BottomNav() {
 
   useEffect(() => {
     fetch('/api/user/profile')
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (data.user?.role === 'admin') {
           setIsAdmin(true);
         }
@@ -20,14 +20,14 @@ export default function BottomNav() {
       .catch(() => {});
   }, [pathname]);
 
-  // Hide bottom nav on login/register/admin auth pages
+  // Hide bottom nav on login/register pages
   if (pathname.includes('/login') || pathname.includes('/register')) {
     return null;
   }
 
   const navItems = [
     { name: 'Home', path: '/', icon: Home },
-    { name: 'Order', path: '/orders', icon: Layers },
+    { name: 'Orders', path: '/orders', icon: Layers },
     { name: 'Team', path: '/team', icon: Users },
     { name: 'Mine', path: '/mine', icon: User },
   ];
@@ -37,8 +37,8 @@ export default function BottomNav() {
   }
 
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-200/90 shadow-2xl">
-      <div className="max-w-md mx-auto flex justify-around items-center h-16 px-2">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-slate-200/90 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] pb-safe">
+      <div className="max-w-lg mx-auto grid grid-cols-4 sm:grid-cols-5 items-center h-16 px-1">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.path;
@@ -46,12 +46,18 @@ export default function BottomNav() {
             <Link
               key={item.path}
               href={item.path}
-              className={`flex flex-col items-center justify-center w-full h-full text-xs font-semibold transition-all ${
-                isActive ? 'text-blue-600 font-bold' : 'text-slate-500 hover:text-slate-800'
+              className={`flex flex-col items-center justify-center py-1 rounded-xl transition-all duration-200 active:scale-95 ${
+                isActive
+                  ? 'text-blue-600 font-extrabold'
+                  : 'text-slate-500 hover:text-slate-800'
               }`}
             >
-              <Icon className={`w-5 h-5 mb-1 ${isActive ? 'stroke-[2.5px] scale-110 text-blue-600' : 'stroke-[1.75px]'}`} />
-              <span>{item.name}</span>
+              <div className={`p-1 rounded-full transition-all ${isActive ? 'bg-blue-50 text-blue-600 scale-110' : ''}`}>
+                <Icon className={`w-5 h-5 ${isActive ? 'stroke-[2.5px]' : 'stroke-[1.75px]'}`} />
+              </div>
+              <span className={`text-[10px] mt-0.5 tracking-tight ${isActive ? 'font-black text-blue-600' : 'font-semibold text-slate-500'}`}>
+                {item.name}
+              </span>
             </Link>
           );
         })}

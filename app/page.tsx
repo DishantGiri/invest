@@ -163,14 +163,14 @@ export default function HomePage() {
   }
 
   return (
-    <div className="space-y-6 pb-8 px-4 md:px-0 text-slate-900">
+    <div className="space-y-5 pb-8 text-slate-900">
       {/* Top Banner & Wallet Hero */}
-      <div className="bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 pt-6 pb-12 px-5 md:px-8 rounded-b-[2rem] md:rounded-3xl text-white shadow-xl relative overflow-hidden border border-slate-800">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 items-center relative z-10">
+      <div className="bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 pt-5 pb-10 px-4 sm:px-8 rounded-3xl text-white shadow-xl relative overflow-hidden border border-slate-800">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-5 items-center relative z-10">
           {/* User Info / Branding */}
           <div className="md:col-span-6 space-y-3">
             <div className="flex items-center space-x-3">
-              <div className="w-14 h-14 rounded-2xl bg-slate-900 border border-slate-800 p-1.5 flex items-center justify-center shadow-md">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-slate-900 border border-slate-800 p-1.5 flex items-center justify-center shadow-md shrink-0">
                 <Image
                   src="/catl_logo_transparent.png"
                   alt="CATL Tech Logo"
@@ -179,16 +179,16 @@ export default function HomePage() {
                   className="object-contain w-full h-full"
                 />
               </div>
-              <div>
+              <div className="min-w-0">
                 <div className="flex items-center space-x-2">
-                  <h2 className="text-lg font-black text-white">
+                  <h2 className="text-base sm:text-lg font-black text-white truncate">
                     {user?.full_name || 'CATL Investor'}
                   </h2>
-                  <span className="bg-blue-600/30 text-cyan-300 border border-blue-500/40 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                    VIP 1 Member
+                  <span className="bg-blue-600/30 text-cyan-300 border border-blue-500/40 text-[9px] sm:text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider shrink-0">
+                    VIP 1
                   </span>
                 </div>
-                <p className="text-xs text-sky-300 font-semibold">
+                <p className="text-xs text-sky-300 font-semibold truncate">
                   {user?.phone_or_email}
                 </p>
               </div>
@@ -199,19 +199,19 @@ export default function HomePage() {
           </div>
 
           {/* Wallet Balance Box */}
-          <div className="md:col-span-6 bg-slate-900/90 backdrop-blur-md border border-slate-800 rounded-3xl p-6 text-center shadow-xl space-y-3">
-            <p className="text-[11px] font-extrabold tracking-widest text-cyan-400 uppercase">
+          <div className="md:col-span-6 bg-slate-900/90 backdrop-blur-md border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-center shadow-xl space-y-2.5">
+            <p className="text-[10px] sm:text-[11px] font-extrabold tracking-widest text-cyan-400 uppercase">
               AVAILABLE WALLET BALANCE
             </p>
-            <div className="text-3xl md:text-4xl font-black tracking-tight text-white">
+            <div className="text-2xl sm:text-4xl font-black tracking-tight text-white">
               NPR {user?.balance !== undefined ? user.balance.toFixed(2) : '0.00'}
             </div>
 
             {/* Action Buttons */}
-            <div className="grid grid-cols-2 gap-3 max-w-xs mx-auto pt-1">
+            <div className="grid grid-cols-2 gap-2.5 max-w-xs mx-auto pt-1">
               <Link
                 href="/recharge"
-                className="py-3 px-4 bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-extrabold rounded-xl text-xs flex items-center justify-center space-x-1.5 shadow-lg shadow-blue-600/30 transition-all"
+                className="py-2.5 sm:py-3 px-3 sm:px-4 bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-extrabold rounded-xl text-xs flex items-center justify-center space-x-1.5 shadow-lg shadow-blue-600/30 transition-all"
               >
                 <Star className="w-4 h-4 fill-white" />
                 <span>Recharge</span>
@@ -219,7 +219,7 @@ export default function HomePage() {
 
               <Link
                 href="/withdraw"
-                className="py-3 px-4 bg-cyan-600 hover:bg-cyan-500 active:scale-95 text-white font-extrabold rounded-xl text-xs flex items-center justify-center space-x-1.5 shadow-lg shadow-cyan-600/30 transition-all"
+                className="py-2.5 sm:py-3 px-3 sm:px-4 bg-cyan-600 hover:bg-cyan-500 active:scale-95 text-white font-extrabold rounded-xl text-xs flex items-center justify-center space-x-1.5 shadow-lg shadow-cyan-600/30 transition-all"
               >
                 <ShoppingCart className="w-4 h-4" />
                 <span>Withdraw</span>
@@ -230,46 +230,46 @@ export default function HomePage() {
       </div>
 
       {/* Quick Actions Grid */}
-      <div className="-mt-8 md:mt-0 relative z-20 max-w-6xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-lg shadow-slate-200/60 p-3 md:p-4 border border-slate-200/90 grid grid-cols-4 gap-2 text-center">
+      <div className="-mt-6 sm:-mt-8 relative z-20 max-w-6xl mx-auto px-2 sm:px-0">
+        <div className="bg-white rounded-2xl shadow-lg shadow-slate-200/60 p-2.5 sm:p-4 border border-slate-200/90 grid grid-cols-4 gap-1.5 sm:gap-3 text-center">
           <Link
             href="/recharge"
-            className="flex flex-col items-center p-2 rounded-xl hover:bg-slate-50 transition-all group"
+            className="flex flex-col items-center p-1.5 sm:p-2 rounded-xl hover:bg-slate-50 transition-all group"
           >
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-sm">
-              <Star className="w-6 h-6 fill-blue-600" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-sm">
+              <Star className="w-5 h-5 sm:w-6 sm:h-6 fill-blue-600" />
             </div>
-            <span className="text-xs font-bold text-slate-800">Recharge</span>
+            <span className="text-[11px] sm:text-xs font-bold text-slate-800">Recharge</span>
           </Link>
 
           <Link
             href="/withdraw"
-            className="flex flex-col items-center p-2 rounded-xl hover:bg-slate-50 transition-all group"
+            className="flex flex-col items-center p-1.5 sm:p-2 rounded-xl hover:bg-slate-50 transition-all group"
           >
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-sm">
-              <ArrowUpRight className="w-6 h-6" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-sm">
+              <ArrowUpRight className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
-            <span className="text-xs font-bold text-slate-800">Withdraw</span>
+            <span className="text-[11px] sm:text-xs font-bold text-slate-800">Withdraw</span>
           </Link>
 
           <Link
             href="/team"
-            className="flex flex-col items-center p-2 rounded-xl hover:bg-slate-50 transition-all group"
+            className="flex flex-col items-center p-1.5 sm:p-2 rounded-xl hover:bg-slate-50 transition-all group"
           >
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-sm">
-              <Users className="w-6 h-6" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-sm">
+              <Users className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
-            <span className="text-xs font-bold text-slate-800">Invite</span>
+            <span className="text-[11px] sm:text-xs font-bold text-slate-800">Invite</span>
           </Link>
 
           <button
             onClick={() => setShowGiftModal(true)}
-            className="flex flex-col items-center p-2 rounded-xl hover:bg-slate-50 transition-all group"
+            className="flex flex-col items-center p-1.5 sm:p-2 rounded-xl hover:bg-slate-50 transition-all group"
           >
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-sm">
-              <Gift className="w-6 h-6" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-sm">
+              <Gift className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
-            <span className="text-xs font-bold text-slate-800">Gift Code</span>
+            <span className="text-[11px] sm:text-xs font-bold text-slate-800">Gift Code</span>
           </button>
         </div>
       </div>
