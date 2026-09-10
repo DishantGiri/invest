@@ -88,7 +88,7 @@ export default function WithdrawPage() {
       fetchProfileAndHistory();
     } catch {
       showToast('Failed to submit withdrawal request', 'error');
-    } font-bold
+    } finally {
       setLoading(false);
     }
   };
