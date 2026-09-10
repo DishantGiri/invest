@@ -1,6 +1,6 @@
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
-import db from './db';
+import { queryOne } from './db';
 
 const JWT_SECRET = new TextEncoder().encode(
   process.env.JWT_SECRET || 'catl_investment_super_secret_key_2026_nxt'
@@ -40,12 +40,12 @@ export async function getSessionUser(): Promise<UserSession | null> {
 }
 
 export async function getFullUserData(userId: number) {
-  const user = db.prepare(`
+  const user = await queryOne(`
     SELECT id, phone_or_email, full_name, role, referral_code, referred_by,
            balance, total_income, total_recharge, total_withdrawal,
            bank_name, account_name, account_number, created_at
     FROM users WHERE id = ?
-  `).get(userId);
+  `, [userId]);
   return user as any;
 }
 

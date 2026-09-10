@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSessionUser, getFullUserData } from '@/lib/auth';
-import db from '@/lib/db';
+import { queryOne, execute } from '@/lib/db';
 
 export async function GET() {
   try {
@@ -15,13 +15,17 @@ export async function GET() {
     }
 
     // Get active investment counts and metrics
-    const activeInvestmentsCount = (
-      db.prepare("SELECT COUNT(*) as count FROM user_investments WHERE user_id = ? AND status = 'active'").get(session.id) as any
-    )?.count || 0;
+    const activeRes = await queryOne<{ count: any }>(
+      "SELECT COUNT(*) as count FROM user_investments WHERE user_id = ? AND status = 'active'",
+      [session.id]
+    );
+    const activeInvestmentsCount = parseInt(activeRes?.count || 0, 10);
 
-    const teamCount = (
-      db.prepare("SELECT COUNT(*) as count FROM users WHERE referred_by = ?").get(userData.referral_code) as any
-    )?.count || 0;
+    const teamRes = await queryOne<{ count: any }>(
+      "SELECT COUNT(*) as count FROM users WHERE referred_by = ?",
+      [userData.referral_code]
+    );
+    const teamCount = parseInt(teamRes?.count || 0, 10);
 
     return NextResponse.json({
       success: true,
@@ -49,11 +53,11 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: 'Bank Name, Account Name, and Account Number are required' }, { status: 400 });
     }
 
-    db.prepare(`
+    await execute(`
       UPDATE users
       SET bank_name = ?, account_name = ?, account_number = ?
       WHERE id = ?
-    `).run(bank_name.trim(), account_name.trim(), account_number.trim(), session.id);
+    `, [bank_name.trim(), account_name.trim(), account_number.trim(), session.id]);
 
     return NextResponse.json({ success: true, message: 'Bank details saved successfully' });
   } catch (error: any) {

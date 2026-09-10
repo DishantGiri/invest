@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSessionUser } from '@/lib/auth';
-import db from '@/lib/db';
+import { query, execute } from '@/lib/db';
 
 export async function GET() {
   try {
@@ -9,7 +9,7 @@ export async function GET() {
       return NextResponse.json({ error: 'Access denied' }, { status: 403 });
     }
 
-    const plans = db.prepare("SELECT * FROM investment_plans ORDER BY id DESC").all();
+    const plans = await query("SELECT * FROM investment_plans ORDER BY id DESC");
     return NextResponse.json({ success: true, plans });
   } catch (error: any) {
     return NextResponse.json({ error: 'Failed to fetch plans' }, { status: 500 });
@@ -36,11 +36,11 @@ export async function POST(req: Request) {
 
     if (id) {
       // Edit existing plan
-      db.prepare(`
+      await execute(`
         UPDATE investment_plans
         SET name = ?, price = ?, daily_income = ?, total_revenue = ?, duration_days = ?, vip_level = ?, badge_text = ?
         WHERE id = ?
-      `).run(
+      `, [
         name.trim(),
         planPrice,
         planDailyIncome,
@@ -49,15 +49,15 @@ export async function POST(req: Request) {
         vip_level || 1,
         badge_text || `VIP ${vip_level || 1}`,
         id
-      );
+      ]);
 
       return NextResponse.json({ success: true, message: 'Investment plan updated!' });
     } else {
       // Add new plan
-      db.prepare(`
+      await execute(`
         INSERT INTO investment_plans (name, price, daily_income, total_revenue, duration_days, vip_level, badge_text, status)
         VALUES (?, ?, ?, ?, ?, ?, ?, 1)
-      `).run(
+      `, [
         name.trim(),
         planPrice,
         planDailyIncome,
@@ -65,7 +65,7 @@ export async function POST(req: Request) {
         planDuration,
         vip_level || 1,
         badge_text || `VIP ${vip_level || 1}`
-      );
+      ]);
 
       return NextResponse.json({ success: true, message: 'New CATL Investment plan created!' });
     }
@@ -84,7 +84,7 @@ export async function PUT(req: Request) {
 
     const { id, status } = await req.json();
 
-    db.prepare("UPDATE investment_plans SET status = ? WHERE id = ?").run(status ? 1 : 0, id);
+    await execute("UPDATE investment_plans SET status = ? WHERE id = ?", [status ? 1 : 0, id]);
 
     return NextResponse.json({ success: true, message: 'Plan status updated' });
   } catch (error: any) {

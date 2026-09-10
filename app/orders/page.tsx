@@ -73,8 +73,8 @@ export default function OrdersPage() {
 
   if (loading) {
     return (
-      <div className="p-4 space-y-4 animate-pulse">
-        <div className="h-28 bg-emerald-900/20 rounded-2xl" />
+      <div className="p-4 space-y-4 animate-pulse max-w-5xl mx-auto">
+        <div className="h-28 bg-slate-900/20 rounded-2xl" />
         <div className="h-32 bg-white rounded-2xl" />
         <div className="h-32 bg-white rounded-2xl" />
       </div>
@@ -82,27 +82,27 @@ export default function OrdersPage() {
   }
 
   return (
-    <div className="px-4 py-5 space-y-4">
+    <div className="px-4 py-5 space-y-4 max-w-5xl mx-auto">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 rounded-3xl p-5 text-white shadow-xl">
+      <div className="bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 rounded-3xl p-5 text-white shadow-xl border border-slate-800">
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h2 className="text-lg font-black text-emerald-400 flex items-center">
+            <h2 className="text-lg font-black text-cyan-400 flex items-center">
               <Layers className="w-5 h-5 mr-2" />
               My Active Orders
             </h2>
-            <p className="text-xs text-emerald-200/80 mt-0.5">
+            <p className="text-xs text-sky-200/80 mt-0.5">
               CATL Daily ROI Investment Returns
             </p>
           </div>
-          <span className="bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-[10px] font-bold px-2.5 py-1 rounded-full">
+          <span className="bg-blue-500/20 border border-blue-400/30 text-cyan-300 text-[10px] font-bold px-2.5 py-1 rounded-full">
             {summary.activeCount} Active Plans
           </span>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 pt-2 border-t border-emerald-800/60">
+        <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-800">
           <div>
-            <p className="text-[10px] uppercase tracking-wider text-emerald-300 font-semibold">
+            <p className="text-[10px] uppercase tracking-wider text-sky-300 font-semibold">
               Total Invested
             </p>
             <p className="text-lg font-black text-white">
@@ -110,10 +110,10 @@ export default function OrdersPage() {
             </p>
           </div>
           <div>
-            <p className="text-[10px] uppercase tracking-wider text-emerald-300 font-semibold">
+            <p className="text-[10px] uppercase tracking-wider text-sky-300 font-semibold">
               Ready to Claim
             </p>
-            <p className="text-lg font-black text-emerald-400">
+            <p className="text-lg font-black text-cyan-400">
               NPR {summary.totalClaimableAmount.toFixed(2)}
             </p>
           </div>
@@ -123,9 +123,9 @@ export default function OrdersPage() {
           <button
             onClick={handleClaimAll}
             disabled={claiming}
-            className="w-full mt-4 py-3 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 font-black rounded-xl text-xs shadow-lg shadow-emerald-500/30 flex items-center justify-center space-x-2 transition-all active:scale-[0.98]"
+            className="w-full mt-4 py-3 bg-blue-600 hover:bg-blue-500 text-white font-black rounded-xl text-xs shadow-lg shadow-blue-600/30 flex items-center justify-center space-x-2 transition-all active:scale-[0.98]"
           >
-            <Coins className="w-4 h-4 fill-emerald-950" />
+            <Coins className="w-4 h-4 fill-white" />
             <span>{claiming ? 'Collecting Profits...' : `Collect All Profits (NPR ${summary.totalClaimableAmount.toFixed(2)})`}</span>
           </button>
         )}
@@ -154,8 +154,8 @@ export default function OrdersPage() {
               >
                 <div className="flex justify-between items-center">
                   <div className="flex items-center space-x-2">
-                    <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xs">
-                      <Zap className="w-4 h-4 fill-emerald-600" />
+                    <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs">
+                      <Zap className="w-4 h-4 fill-blue-600" />
                     </div>
                     <div>
                       <h4 className="font-bold text-slate-900 text-xs">{inv.plan_name}</h4>
@@ -168,7 +168,7 @@ export default function OrdersPage() {
                   <span
                     className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase ${
                       inv.status === 'active'
-                        ? 'bg-emerald-100 text-emerald-700 border border-emerald-300'
+                        ? 'bg-blue-50 text-blue-700 border border-blue-200'
                         : 'bg-slate-100 text-slate-600'
                     }`}
                   >
@@ -179,7 +179,7 @@ export default function OrdersPage() {
                 <div className="grid grid-cols-3 gap-2 bg-slate-50 p-2.5 rounded-xl text-center text-xs">
                   <div>
                     <span className="text-[9px] font-semibold text-slate-400 uppercase block">Daily Income</span>
-                    <span className="font-bold text-emerald-600">NPR {inv.daily_income.toFixed(2)}</span>
+                    <span className="font-bold text-blue-600">NPR {inv.daily_income.toFixed(2)}</span>
                   </div>
                   <div>
                     <span className="text-[9px] font-semibold text-slate-400 uppercase block">Earned So Far</span>
@@ -199,22 +199,22 @@ export default function OrdersPage() {
                   </div>
                   <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
                     <div
-                      className="bg-emerald-500 h-2 rounded-full transition-all duration-500"
+                      className="bg-blue-600 h-2 rounded-full transition-all duration-500"
                       style={{ width: `${progressPercent}%` }}
                     />
                   </div>
                 </div>
 
                 {inv.claimStats.claimableAmount > 0 ? (
-                  <div className="flex items-center justify-between bg-emerald-50 border border-emerald-200 p-2.5 rounded-xl text-xs">
-                    <div className="flex items-center text-emerald-800 font-bold">
-                      <CheckCircle2 className="w-4 h-4 mr-1.5 text-emerald-600" />
+                  <div className="flex items-center justify-between bg-blue-50 border border-blue-200 p-2.5 rounded-xl text-xs">
+                    <div className="flex items-center text-blue-900 font-bold">
+                      <CheckCircle2 className="w-4 h-4 mr-1.5 text-blue-600" />
                       ROI Ready: NPR {inv.claimStats.claimableAmount.toFixed(2)}
                     </div>
                     <button
                       onClick={handleClaimAll}
                       disabled={claiming}
-                      className="px-3 py-1 bg-emerald-600 text-white font-bold rounded-lg text-[11px] hover:bg-emerald-500"
+                      className="px-3 py-1 bg-blue-600 text-white font-bold rounded-lg text-[11px] hover:bg-blue-500"
                     >
                       Claim
                     </button>
@@ -222,10 +222,10 @@ export default function OrdersPage() {
                 ) : (
                   <div className="flex items-center justify-between text-[11px] text-slate-500 bg-slate-50 p-2 rounded-xl">
                     <span className="flex items-center">
-                      <Clock className="w-3.5 h-3.5 mr-1 text-emerald-600" />
+                      <Clock className="w-3.5 h-3.5 mr-1 text-blue-600" />
                       Cycle ROI progress
                     </span>
-                    <span className="font-medium text-emerald-700">
+                    <span className="font-medium text-blue-700">
                       {inv.claimStats.hoursPassedInCycle}h / 24h passed
                     </span>
                   </div>

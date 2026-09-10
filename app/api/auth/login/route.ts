@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import db from '@/lib/db';
+import { queryOne } from '@/lib/db';
 import { createToken } from '@/lib/auth';
 
 export async function POST(req: Request) {
@@ -13,7 +13,7 @@ export async function POST(req: Request) {
 
     const normalizedInput = phone_or_email.trim().toLowerCase();
 
-    const user = db.prepare('SELECT * FROM users WHERE LOWER(phone_or_email) = ?').get(normalizedInput) as any;
+    const user = await queryOne('SELECT * FROM users WHERE LOWER(phone_or_email) = ?', [normalizedInput]) as any;
 
     if (!user) {
       return NextResponse.json({ error: 'Invalid credentials. User not found.' }, { status: 401 });

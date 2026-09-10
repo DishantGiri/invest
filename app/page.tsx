@@ -152,7 +152,7 @@ export default function HomePage() {
   if (loading) {
     return (
       <div className="p-4 md:p-8 space-y-4 animate-pulse">
-        <div className="h-48 bg-emerald-950/20 rounded-3xl" />
+        <div className="h-48 bg-slate-900/20 rounded-3xl" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="h-44 bg-white rounded-2xl" />
           <div className="h-44 bg-white rounded-2xl" />
@@ -165,15 +165,15 @@ export default function HomePage() {
   return (
     <div className="space-y-6 pb-8 px-4 md:px-0">
       {/* Top Banner & Wallet Hero matching PC + Mobile Responsive Design */}
-      <div className="bg-gradient-to-br from-emerald-950 via-teal-950 to-slate-950 pt-6 pb-12 px-5 md:px-8 rounded-b-[2rem] md:rounded-3xl text-white shadow-2xl relative overflow-hidden border border-emerald-900/50">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 pt-6 pb-12 px-5 md:px-8 rounded-b-[2rem] md:rounded-3xl text-white shadow-2xl relative overflow-hidden border border-slate-800">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 items-center relative z-10">
           {/* User Info / Branding */}
           <div className="md:col-span-6 space-y-3">
             <div className="flex items-center space-x-3">
-              <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-400/30 p-1 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+              <div className="w-14 h-14 rounded-2xl bg-blue-500/20 border border-blue-400/30 p-1 flex items-center justify-center shadow-lg shadow-blue-500/20">
                 <Image
                   src="/catl_logo.png"
                   alt="CATL Tech Logo"
@@ -187,36 +187,36 @@ export default function HomePage() {
                   <h2 className="text-lg font-black text-white">
                     {user?.full_name || 'CATL Investor'}
                   </h2>
-                  <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[10px] font-extrabold px-2 py-0.5 rounded-full">
+                  <span className="bg-blue-500/20 text-cyan-300 border border-blue-400/30 text-[10px] font-extrabold px-2 py-0.5 rounded-full">
                     VIP 1
                   </span>
                 </div>
-                <p className="text-xs text-emerald-300 font-medium">
+                <p className="text-xs text-sky-300 font-medium">
                   {user?.phone_or_email}
                 </p>
               </div>
             </div>
-            <p className="text-xs text-emerald-200/80 hidden md:block max-w-md">
+            <p className="text-xs text-slate-300 hidden md:block max-w-md">
               Welcome to Contemporary Amperex Technology Co. Limited (CATL). Invest in clean energy battery storage matrix and earn guaranteed daily interest payouts.
             </p>
           </div>
 
           {/* Wallet Balance Box */}
           <div className="md:col-span-6 bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-6 text-center shadow-inner space-y-3">
-            <p className="text-xs font-bold tracking-widest text-emerald-300 uppercase">
+            <p className="text-xs font-bold tracking-widest text-sky-300 uppercase">
               WALLET BALANCE
             </p>
             <div className="text-3xl md:text-4xl font-black tracking-tight text-white">
               NPR {user?.balance !== undefined ? user.balance.toFixed(2) : '0.00'}
             </div>
 
-            {/* Action Buttons matching screenshot */}
+            {/* Action Buttons */}
             <div className="grid grid-cols-2 gap-3 max-w-xs mx-auto pt-1">
               <Link
                 href="/recharge"
-                className="py-3 px-4 bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-emerald-950 font-black rounded-xl text-xs flex items-center justify-center space-x-1.5 shadow-lg shadow-emerald-500/30 transition-all"
+                className="py-3 px-4 bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-black rounded-xl text-xs flex items-center justify-center space-x-1.5 shadow-lg shadow-blue-600/30 transition-all"
               >
-                <Star className="w-4 h-4 fill-emerald-950" />
+                <Star className="w-4 h-4 fill-white" />
                 <span>Recharge</span>
               </Link>
 
@@ -239,8 +239,8 @@ export default function HomePage() {
             href="/recharge"
             className="flex flex-col items-center p-2 rounded-xl hover:bg-slate-50 transition-all group"
           >
-            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-sm border border-emerald-100">
-              <Star className="w-6 h-6 fill-emerald-600" />
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-sm border border-blue-100">
+              <Star className="w-6 h-6 fill-blue-600" />
             </div>
             <span className="text-xs font-bold text-slate-800">Recharge</span>
           </Link>
@@ -249,7 +249,7 @@ export default function HomePage() {
             href="/withdraw"
             className="flex flex-col items-center p-2 rounded-xl hover:bg-slate-50 transition-all group"
           >
-            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-sm border border-emerald-100">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-sm border border-blue-100">
               <ArrowUpRight className="w-6 h-6" />
             </div>
             <span className="text-xs font-bold text-slate-800">Withdraw</span>
@@ -259,7 +259,7 @@ export default function HomePage() {
             href="/team"
             className="flex flex-col items-center p-2 rounded-xl hover:bg-slate-50 transition-all group"
           >
-            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-sm border border-emerald-100">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-sm border border-blue-100">
               <Users className="w-6 h-6" />
             </div>
             <span className="text-xs font-bold text-slate-800">Invite</span>
@@ -269,7 +269,7 @@ export default function HomePage() {
             onClick={() => setShowGiftModal(true)}
             className="flex flex-col items-center p-2 rounded-xl hover:bg-slate-50 transition-all group"
           >
-            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-sm border border-emerald-100">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform shadow-sm border border-blue-100">
               <Gift className="w-6 h-6" />
             </div>
             <span className="text-xs font-bold text-slate-800">Gift Code</span>
@@ -281,10 +281,10 @@ export default function HomePage() {
       <div className="max-w-6xl mx-auto space-y-4">
         <div className="flex justify-between items-center px-1">
           <h3 className="text-base font-black text-slate-900 tracking-tight flex items-center">
-            <Zap className="w-5 h-5 text-emerald-600 mr-2 fill-emerald-600" />
+            <Zap className="w-5 h-5 text-blue-600 mr-2 fill-blue-600" />
             CATL Battery Investment Plans
           </h3>
-          <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+          <span className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
             Daily Auto Income
           </span>
         </div>
@@ -300,20 +300,20 @@ export default function HomePage() {
                 {/* Plan Header */}
                 <div className="p-4 border-b border-slate-100 flex justify-between items-center">
                   <div className="flex items-center space-x-3">
-                    <div className="w-11 h-11 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center group-hover:scale-105 transition-transform">
-                      <Cpu className="w-6 h-6 text-emerald-600" />
+                    <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center group-hover:scale-105 transition-transform">
+                      <Cpu className="w-6 h-6 text-blue-600" />
                     </div>
                     <div>
                       <h4 className="text-sm font-black text-slate-900 leading-snug">
                         {plan.name}
                       </h4>
-                      <p className="text-base font-black text-emerald-600">
+                      <p className="text-base font-black text-blue-600">
                         NPR {plan.price.toFixed(2)}
                       </p>
                     </div>
                   </div>
 
-                  <span className="bg-emerald-600 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-lg uppercase tracking-wider">
+                  <span className="bg-blue-600 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-lg uppercase tracking-wider">
                     {plan.badge_text || `VIP ${plan.vip_level}`}
                   </span>
                 </div>
@@ -322,7 +322,7 @@ export default function HomePage() {
                 <div className="bg-slate-50/80 p-4 grid grid-cols-3 gap-2 text-center text-xs">
                   <div>
                     <p className="text-[10px] font-bold text-slate-400 uppercase">Daily Income</p>
-                    <p className="font-extrabold text-emerald-600 mt-0.5">NPR {plan.daily_income.toFixed(2)}</p>
+                    <p className="font-extrabold text-blue-600 mt-0.5">NPR {plan.daily_income.toFixed(2)}</p>
                   </div>
                   <div>
                     <p className="text-[10px] font-bold text-slate-400 uppercase">Total Revenue</p>
@@ -339,7 +339,7 @@ export default function HomePage() {
               <div className="p-4 bg-white border-t border-slate-100">
                 <button
                   onClick={() => setSelectedPlan(plan)}
-                  className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 active:scale-[0.99] text-white font-bold rounded-2xl text-xs flex items-center justify-center space-x-1.5 shadow-lg shadow-emerald-600/20 transition-all"
+                  className="w-full py-3 bg-blue-600 hover:bg-blue-500 active:scale-[0.99] text-white font-bold rounded-2xl text-xs flex items-center justify-center space-x-1.5 shadow-lg shadow-blue-600/20 transition-all"
                 >
                   <Zap className="w-4 h-4 fill-white" />
                   <span>Invest Now</span>
@@ -356,8 +356,8 @@ export default function HomePage() {
           <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div className="flex justify-between items-center">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                  <Zap className="w-4 h-4 fill-emerald-600" />
+                <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                  <Zap className="w-4 h-4 fill-blue-600" />
                 </div>
                 <h3 className="font-black text-slate-900 text-base">Confirm Investment</h3>
               </div>
@@ -376,11 +376,11 @@ export default function HomePage() {
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500">Investment Amount:</span>
-                <span className="font-bold text-emerald-600">NPR {selectedPlan.price.toFixed(2)}</span>
+                <span className="font-bold text-blue-600">NPR {selectedPlan.price.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500">Daily Return:</span>
-                <span className="font-bold text-emerald-600">NPR {selectedPlan.daily_income.toFixed(2)} / day</span>
+                <span className="font-bold text-blue-600">NPR {selectedPlan.daily_income.toFixed(2)} / day</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500">Total Expected Profit:</span>
@@ -393,7 +393,7 @@ export default function HomePage() {
               <hr className="border-slate-200 my-2" />
               <div className="flex justify-between font-bold text-sm">
                 <span className="text-slate-700">Your Current Balance:</span>
-                <span className={(user?.balance || 0) >= selectedPlan.price ? 'text-emerald-600' : 'text-rose-600'}>
+                <span className={(user?.balance || 0) >= selectedPlan.price ? 'text-blue-600' : 'text-rose-600'}>
                   NPR {user?.balance !== undefined ? user.balance.toFixed(2) : '0.00'}
                 </span>
               </div>
@@ -416,7 +416,7 @@ export default function HomePage() {
                 <button
                   onClick={handleInvest}
                   disabled={investing}
-                  className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs shadow-lg shadow-emerald-600/30 flex items-center justify-center space-x-1"
+                  className="flex-1 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl text-xs shadow-lg shadow-blue-600/30 flex items-center justify-center space-x-1"
                 >
                   <span>{investing ? 'Processing...' : 'Confirm & Invest'}</span>
                   <ChevronRight className="w-4 h-4" />
@@ -440,7 +440,7 @@ export default function HomePage() {
           <div className="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl">
             <div className="flex justify-between items-center">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
                   <Gift className="w-4 h-4" />
                 </div>
                 <h3 className="font-black text-slate-900 text-base">Redeem Gift Code</h3>
@@ -455,14 +455,14 @@ export default function HomePage() {
 
             <form onSubmit={handleClaimGift} className="space-y-3">
               <p className="text-xs text-slate-600">
-                Enter your promo gift code below (Try: <code className="font-bold text-emerald-600">CATL2026</code>)
+                Enter your promo gift code below (Try: <code className="font-bold text-blue-600">CATL2026</code>)
               </p>
 
               <input
                 type="text"
                 required
                 placeholder="Enter Gift Code (e.g. CATL2026)"
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold uppercase tracking-wider focus:outline-none focus:border-emerald-500"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold uppercase tracking-wider focus:outline-none focus:border-blue-500"
                 value={giftCode}
                 onChange={(e) => setGiftCode(e.target.value.toUpperCase())}
               />
@@ -470,7 +470,7 @@ export default function HomePage() {
               <button
                 type="submit"
                 disabled={claimingGift}
-                className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs shadow-lg shadow-emerald-600/30 flex items-center justify-center space-x-1"
+                className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl text-xs shadow-lg shadow-blue-600/30 flex items-center justify-center space-x-1"
               >
                 <span>{claimingGift ? 'Redeeming...' : 'Claim Gift Bonus'}</span>
               </button>

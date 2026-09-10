@@ -127,14 +127,14 @@ export default function RechargePage() {
   return (
     <div className="px-4 py-5 space-y-4 max-w-4xl mx-auto">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-emerald-950 via-teal-900 to-slate-900 rounded-3xl p-5 text-white shadow-xl">
+      <div className="bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 rounded-3xl p-5 text-white shadow-xl border border-slate-800">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-2xl bg-emerald-500 text-emerald-950 flex items-center justify-center font-bold">
-            <Star className="w-6 h-6 fill-emerald-950" />
+          <div className="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-bold">
+            <Star className="w-6 h-6 fill-white" />
           </div>
           <div>
-            <h2 className="text-lg font-black text-emerald-400">Wallet Recharge</h2>
-            <p className="text-xs text-emerald-200/80">
+            <h2 className="text-lg font-black text-cyan-400">Wallet Recharge</h2>
+            <p className="text-xs text-sky-200/80">
               Scan QR code & submit deposit request
             </p>
           </div>
@@ -145,7 +145,7 @@ export default function RechargePage() {
         {/* Payment QR Box */}
         <div className="md:col-span-6 bg-white rounded-3xl p-6 border border-slate-200 shadow-sm text-center flex flex-col items-center justify-center space-y-3">
           <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center justify-center">
-            <QrCode className="w-4 h-4 text-emerald-600 mr-1.5" />
+            <QrCode className="w-4 h-4 text-blue-600 mr-1.5" />
             Scan QR Code to Pay ({paymentMethod})
           </h3>
 
@@ -177,7 +177,7 @@ export default function RechargePage() {
                   onClick={() => setAmount(p)}
                   className={`py-2 rounded-xl font-black text-xs transition-all border ${
                     amount === p
-                      ? 'bg-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-600/30'
+                      ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-600/30'
                       : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                   }`}
                 >
@@ -199,12 +199,12 @@ export default function RechargePage() {
                   onClick={() => setPaymentMethod(m)}
                   className={`py-2 px-3 rounded-xl font-bold text-xs flex items-center justify-between border transition-all ${
                     paymentMethod === m
-                      ? 'bg-emerald-50 border-emerald-600 text-emerald-900 shadow-sm'
+                      ? 'bg-blue-50 border-blue-600 text-blue-900 shadow-sm'
                       : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
                   }`}
                 >
                   <span>{m}</span>
-                  {paymentMethod === m && <CheckCircle2 className="w-4 h-4 text-emerald-600" />}
+                  {paymentMethod === m && <CheckCircle2 className="w-4 h-4 text-blue-600" />}
                 </button>
               ))}
             </div>
@@ -229,11 +229,11 @@ export default function RechargePage() {
                   htmlFor="recharge-proof-upload"
                   className="cursor-pointer px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl flex items-center space-x-1.5 text-xs border border-slate-200 transition-colors"
                 >
-                  <Upload className="w-4 h-4 text-emerald-600" />
+                  <Upload className="w-4 h-4 text-blue-600" />
                   <span>{uploadingProof ? 'Uploading Receipt...' : 'Attach Receipt Image'}</span>
                 </label>
                 {proofImageUrl && (
-                  <span className="text-xs font-bold text-emerald-600 flex items-center">
+                  <span className="text-xs font-bold text-blue-600 flex items-center">
                     <FileCheck className="w-4 h-4 mr-1" />
                     Attached
                   </span>
@@ -248,7 +248,7 @@ export default function RechargePage() {
               <input
                 type="text"
                 placeholder="Your name or phone used for payment"
-                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-emerald-500"
+                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-blue-500"
                 value={senderInfo}
                 onChange={(e) => setSenderInfo(e.target.value)}
               />
@@ -257,7 +257,7 @@ export default function RechargePage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs shadow-lg shadow-emerald-600/30 flex items-center justify-center space-x-2 transition-all active:scale-[0.98]"
+              className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl text-xs shadow-lg shadow-blue-600/30 flex items-center justify-center space-x-2 transition-all active:scale-[0.98]"
             >
               <span>{loading ? 'Submitting Request...' : `Submit Deposit (NPR ${amount})`}</span>
               <ArrowRight className="w-4 h-4" />
@@ -291,7 +291,7 @@ export default function RechargePage() {
                 <span
                   className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase flex items-center ${
                     item.status === 'approved'
-                      ? 'bg-emerald-100 text-emerald-700'
+                      ? 'bg-blue-50 text-blue-700'
                       : item.status === 'rejected'
                       ? 'bg-rose-100 text-rose-700'
                       : 'bg-amber-100 text-amber-700'

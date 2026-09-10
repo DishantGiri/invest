@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSessionUser } from '@/lib/auth';
-import db from '@/lib/db';
+import { query, queryOne, withTransaction } from '@/lib/db';
 
 export async function GET() {
   try {
@@ -9,13 +9,13 @@ export async function GET() {
       return NextResponse.json({ error: 'Access denied' }, { status: 403 });
     }
 
-    const withdrawals = db.prepare(`
+    const withdrawals = await query(`
       SELECT t.*, u.phone_or_email, u.full_name, u.bank_name, u.account_name, u.account_number
       FROM transactions t
       JOIN users u ON t.user_id = u.id
       WHERE t.type = 'withdrawal'
       ORDER BY CASE WHEN t.status = 'pending' THEN 0 ELSE 1 END, t.id DESC
-    `).all();
+    `);
 
     return NextResponse.json({ success: true, withdrawals });
   } catch (error: any) {
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
 
     const { transactionId, action, adminNote } = await req.json();
 
-    const txn = db.prepare("SELECT * FROM transactions WHERE id = ? AND type = 'withdrawal'").get(transactionId) as any;
+    const txn = await queryOne("SELECT * FROM transactions WHERE id = ? AND type = 'withdrawal'", [transactionId]) as any;
     if (!txn) {
       return NextResponse.json({ error: 'Withdrawal transaction not found' }, { status: 404 });
     }
@@ -42,40 +42,36 @@ export async function POST(req: Request) {
     }
 
     if (action === 'approve') {
-      const approveTx = db.transaction(() => {
-        db.prepare(`
+      await withTransaction(async (client) => {
+        await client.query(`
           UPDATE transactions
-          SET status = 'approved', admin_note = ?
-          WHERE id = ?
-        `).run(adminNote || 'Payout approved and completed by Admin', transactionId);
+          SET status = 'approved', admin_note = $1
+          WHERE id = $2
+        `, [adminNote || 'Payout approved and completed by Admin', transactionId]);
 
-        db.prepare(`
+        await client.query(`
           UPDATE users
-          SET total_withdrawal = total_withdrawal + ?
-          WHERE id = ?
-        `).run(txn.amount, txn.user_id);
+          SET total_withdrawal = total_withdrawal + $1
+          WHERE id = $2
+        `, [txn.amount, txn.user_id]);
       });
-
-      approveTx();
 
       return NextResponse.json({ success: true, message: `Withdrawal of NPR ${txn.amount} marked as APPROVED!` });
     } else if (action === 'reject') {
-      const rejectTx = db.transaction(() => {
-        db.prepare(`
+      await withTransaction(async (client) => {
+        await client.query(`
           UPDATE transactions
-          SET status = 'rejected', admin_note = ?
-          WHERE id = ?
-        `).run(adminNote || 'Rejected by Admin', transactionId);
+          SET status = 'rejected', admin_note = $1
+          WHERE id = $2
+        `, [adminNote || 'Rejected by Admin', transactionId]);
 
         // Refund user balance
-        db.prepare(`
+        await client.query(`
           UPDATE users
-          SET balance = balance + ?
-          WHERE id = ?
-        `).run(txn.amount, txn.user_id);
+          SET balance = balance + $1
+          WHERE id = $2
+        `, [txn.amount, txn.user_id]);
       });
-
-      rejectTx();
 
       return NextResponse.json({ success: true, message: `Withdrawal rejected and NPR ${txn.amount} refunded to user wallet.` });
     }

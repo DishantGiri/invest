@@ -3,13 +3,15 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { ShieldCheck, Lock, Mail, ArrowRight, AlertTriangle } from 'lucide-react';
+import Image from 'next/image';
+import { ShieldCheck, Lock, Mail, ArrowRight, AlertTriangle, Eye, EyeOff } from 'lucide-react';
 import { showToast } from '@/components/Toast';
 
 function AdminLoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [form, setForm] = useState({ phone_or_email: 'admin@catl.com', password: 'admin123' });
+  const [form, setForm] = useState({ phone_or_email: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -55,14 +57,20 @@ function AdminLoginForm() {
   };
 
   return (
-    <div className="min-h-[85vh] flex flex-col justify-center px-4 py-8">
+    <div className="min-h-[85vh] flex flex-col justify-center px-4 py-8 max-w-md mx-auto">
       <div className="bg-slate-900 text-white rounded-3xl shadow-2xl overflow-hidden border border-slate-800">
-        <div className="bg-slate-850 p-6 text-center border-b border-slate-800">
-          <div className="w-14 h-14 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl mx-auto mb-3 flex items-center justify-center">
-            <ShieldCheck className="w-8 h-8 text-emerald-400" />
+        <div className="bg-slate-950 p-6 text-center border-b border-slate-800">
+          <div className="relative w-44 h-14 mx-auto mb-2">
+            <Image
+              src="/catl_logo.png"
+              alt="CATL Official Logo"
+              fill
+              className="object-contain drop-shadow-[0_0_12px_rgba(34,211,238,0.4)]"
+              priority
+            />
           </div>
-          <h2 className="text-xl font-black text-emerald-400 tracking-tight">
-            CATL ADMIN PORTAL
+          <h2 className="text-lg font-black text-cyan-400 tracking-tight">
+            CATL SYSTEM ADMIN PORTAL
           </h2>
           <p className="text-xs text-slate-400 mt-1">
             Restricted System Administration & Control Center
@@ -87,7 +95,7 @@ function AdminLoginForm() {
                 type="text"
                 required
                 placeholder="admin@catl.com"
-                className="w-full pl-10 pr-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-sm font-medium focus:outline-none focus:border-emerald-500 text-white"
+                className="w-full pl-10 pr-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-sm font-medium focus:outline-none focus:border-blue-500 text-white"
                 value={form.phone_or_email}
                 onChange={(e) => setForm({ ...form, phone_or_email: e.target.value })}
               />
@@ -101,25 +109,32 @@ function AdminLoginForm() {
             <div className="relative">
               <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 required
-                placeholder="Password"
-                className="w-full pl-10 pr-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-sm font-medium focus:outline-none focus:border-emerald-500 text-white"
+                placeholder="••••••••"
+                className="w-full pl-10 pr-10 py-3 bg-slate-950 border border-slate-800 rounded-xl text-sm font-medium focus:outline-none focus:border-blue-500 text-white"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
             </div>
           </div>
 
           <div className="bg-slate-950/60 p-3 rounded-xl border border-slate-800 text-[11px] text-slate-400">
-            <span className="font-bold text-emerald-400">Default Admin Credentials:</span><br />
-            Email: <code className="text-white">admin@catl.com</code> | Password: <code className="text-white">admin123</code>
+            <span className="font-bold text-cyan-400">Initial System Admin Credentials:</span><br />
+            Email: <code className="text-white">admin@catl.com</code> | Password: <code className="text-white">admin123</code> (Can be changed in Admin Dashboard Settings)
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow-lg shadow-emerald-600/30 flex items-center justify-center space-x-2 transition-all"
+            className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl shadow-lg shadow-blue-600/30 flex items-center justify-center space-x-2 transition-all"
           >
             <span>{loading ? 'Entering Admin System...' : 'Access Admin Control'}</span>
             <ArrowRight className="w-4 h-4" />

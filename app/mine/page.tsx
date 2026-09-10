@@ -113,7 +113,7 @@ export default function MinePage() {
   if (loading) {
     return (
       <div className="p-4 space-y-4 animate-pulse">
-        <div className="h-44 bg-emerald-900/20 rounded-3xl" />
+        <div className="h-44 bg-slate-900/20 rounded-3xl" />
         <div className="h-32 bg-white rounded-2xl" />
         <div className="h-32 bg-white rounded-2xl" />
       </div>
@@ -121,41 +121,41 @@ export default function MinePage() {
   }
 
   return (
-    <div className="px-4 py-5 space-y-4">
+    <div className="px-4 py-5 space-y-4 max-w-5xl mx-auto">
       {/* Header Profile Card */}
-      <div className="bg-gradient-to-br from-emerald-950 via-teal-900 to-slate-900 rounded-3xl p-5 text-white shadow-xl relative overflow-hidden">
+      <div className="bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 rounded-3xl p-5 text-white shadow-xl relative overflow-hidden border border-slate-800">
         <div className="flex items-center space-x-3 mb-4">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-500 text-emerald-950 flex items-center justify-center font-black text-xl shadow-lg">
+          <div className="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-black text-xl shadow-lg">
             {user?.full_name ? user.full_name.charAt(0).toUpperCase() : 'U'}
           </div>
           <div className="flex-1">
             <div className="flex items-center space-x-2">
               <h2 className="text-base font-black text-white">{user?.full_name || 'CATL Investor'}</h2>
-              <span className="text-[10px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-2 py-0.5 rounded-md">
+              <span className="text-[10px] font-extrabold bg-blue-500/20 text-cyan-300 border border-blue-400/30 px-2 py-0.5 rounded-md">
                 VIP 1
               </span>
             </div>
-            <p className="text-xs text-emerald-200/80">{user?.phone_or_email}</p>
-            <p className="text-[10px] text-emerald-300 font-mono mt-0.5">Code: {user?.referral_code}</p>
+            <p className="text-xs text-sky-200/80">{user?.phone_or_email}</p>
+            <p className="text-[10px] text-cyan-300 font-mono mt-0.5">Code: {user?.referral_code}</p>
           </div>
         </div>
 
         {/* Financial Grid */}
-        <div className="grid grid-cols-2 gap-2.5 pt-3 border-t border-emerald-800/60 text-xs">
+        <div className="grid grid-cols-2 gap-2.5 pt-3 border-t border-slate-800 text-xs">
           <div className="bg-white/10 p-2.5 rounded-xl backdrop-blur-sm">
-            <span className="text-[9px] uppercase tracking-wider text-emerald-300 font-semibold block">Wallet Balance</span>
+            <span className="text-[9px] uppercase tracking-wider text-sky-300 font-semibold block">Wallet Balance</span>
             <span className="text-base font-black text-white">NPR {user?.balance ? user.balance.toFixed(2) : '0.00'}</span>
           </div>
           <div className="bg-white/10 p-2.5 rounded-xl backdrop-blur-sm">
-            <span className="text-[9px] uppercase tracking-wider text-emerald-300 font-semibold block">Total Revenue</span>
-            <span className="text-base font-black text-emerald-400">NPR {user?.total_income ? user.total_income.toFixed(2) : '0.00'}</span>
+            <span className="text-[9px] uppercase tracking-wider text-sky-300 font-semibold block">Total Revenue</span>
+            <span className="text-base font-black text-cyan-400">NPR {user?.total_income ? user.total_income.toFixed(2) : '0.00'}</span>
           </div>
           <div className="bg-white/10 p-2.5 rounded-xl backdrop-blur-sm">
-            <span className="text-[9px] uppercase tracking-wider text-emerald-300 font-semibold block">Total Recharged</span>
+            <span className="text-[9px] uppercase tracking-wider text-sky-300 font-semibold block">Total Recharged</span>
             <span className="text-base font-bold text-white">NPR {user?.total_recharge ? user.total_recharge.toFixed(2) : '0.00'}</span>
           </div>
           <div className="bg-white/10 p-2.5 rounded-xl backdrop-blur-sm">
-            <span className="text-[9px] uppercase tracking-wider text-emerald-300 font-semibold block">Total Withdrawn</span>
+            <span className="text-[9px] uppercase tracking-wider text-sky-300 font-semibold block">Total Withdrawn</span>
             <span className="text-base font-bold text-white">NPR {user?.total_withdrawal ? user.total_withdrawal.toFixed(2) : '0.00'}</span>
           </div>
         </div>
@@ -168,7 +168,7 @@ export default function MinePage() {
           className="w-full p-4 flex justify-between items-center hover:bg-slate-50 transition-colors text-left"
         >
           <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
               <CreditCard className="w-5 h-5" />
             </div>
             <div>
@@ -186,7 +186,7 @@ export default function MinePage() {
           className="w-full p-4 flex justify-between items-center hover:bg-slate-50 transition-colors"
         >
           <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
               <History className="w-5 h-5" />
             </div>
             <div>
@@ -204,7 +204,7 @@ export default function MinePage() {
           className="w-full p-4 flex justify-between items-center hover:bg-slate-50 transition-colors"
         >
           <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
               <Users className="w-5 h-5" />
             </div>
             <div>
@@ -220,18 +220,18 @@ export default function MinePage() {
         {user?.role === 'admin' && (
           <Link
             href="/admin/dashboard"
-            className="w-full p-4 flex justify-between items-center bg-slate-900 text-white hover:bg-slate-800 transition-colors"
+            className="w-full p-4 flex justify-between items-center bg-slate-950 text-white hover:bg-slate-900 transition-colors"
           >
             <div className="flex items-center space-x-3">
-              <div className="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-400/40 text-emerald-400 flex items-center justify-center">
-                <ShieldCheck className="w-5 h-5 text-emerald-400" />
+              <div className="w-9 h-9 rounded-xl bg-blue-500/20 border border-blue-400/40 text-cyan-400 flex items-center justify-center">
+                <ShieldCheck className="w-5 h-5 text-cyan-400" />
               </div>
               <div>
-                <h4 className="text-xs font-bold text-emerald-400">System Admin Control Center</h4>
+                <h4 className="text-xs font-bold text-cyan-400">System Admin Control Center</h4>
                 <p className="text-[10px] text-slate-400">Review pending deposits, payouts, & user balances</p>
               </div>
             </div>
-            <ChevronRight className="w-4 h-4 text-emerald-400" />
+            <ChevronRight className="w-4 h-4 text-cyan-400" />
           </Link>
         )}
 
@@ -267,7 +267,7 @@ export default function MinePage() {
                   type="text"
                   required
                   placeholder="eSewa / Khalti / Global IME Bank"
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:outline-none focus:border-emerald-500"
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:outline-none focus:border-blue-500"
                   value={bankForm.bank_name}
                   onChange={(e) => setBankForm({ ...bankForm, bank_name: e.target.value })}
                 />
@@ -279,7 +279,7 @@ export default function MinePage() {
                   type="text"
                   required
                   placeholder="Full name as in Bank/Wallet"
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:outline-none focus:border-emerald-500"
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:outline-none focus:border-blue-500"
                   value={bankForm.account_name}
                   onChange={(e) => setBankForm({ ...bankForm, account_name: e.target.value })}
                 />
@@ -291,7 +291,7 @@ export default function MinePage() {
                   type="text"
                   required
                   placeholder="Account Number or Wallet ID"
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold focus:outline-none focus:border-emerald-500 text-slate-900"
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold focus:outline-none focus:border-blue-500 text-slate-900"
                   value={bankForm.account_number}
                   onChange={(e) => setBankForm({ ...bankForm, account_number: e.target.value })}
                 />
@@ -300,7 +300,7 @@ export default function MinePage() {
               <button
                 type="submit"
                 disabled={savingBank}
-                className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow-lg shadow-emerald-600/30"
+                className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl shadow-lg shadow-blue-600/30"
               >
                 {savingBank ? 'Saving...' : 'Save Bank Details'}
               </button>

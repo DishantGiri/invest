@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSessionUser } from '@/lib/auth';
-import db from '@/lib/db';
+import { query, queryOne, execute } from '@/lib/db';
 
 export async function GET() {
   try {
@@ -9,13 +9,13 @@ export async function GET() {
       return NextResponse.json({ error: 'Access denied' }, { status: 403 });
     }
 
-    const users = db.prepare(`
+    const users = await query(`
       SELECT id, phone_or_email, full_name, role, referral_code, referred_by,
              balance, total_income, total_recharge, total_withdrawal,
              bank_name, account_name, account_number, created_at
       FROM users
       ORDER BY id DESC
-    `).all();
+    `);
 
     return NextResponse.json({ success: true, users });
   } catch (error: any) {
@@ -32,17 +32,17 @@ export async function POST(req: Request) {
 
     const { userId, newBalance, role } = await req.json();
 
-    const user = db.prepare("SELECT id FROM users WHERE id = ?").get(userId);
+    const user = await queryOne('SELECT id FROM users WHERE id = ?', [userId]);
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
     if (newBalance !== undefined && !isNaN(Number(newBalance))) {
-      db.prepare("UPDATE users SET balance = ? WHERE id = ?").run(Number(newBalance), userId);
+      await execute('UPDATE users SET balance = ? WHERE id = ?', [Number(newBalance), userId]);
     }
 
     if (role && (role === 'user' || role === 'admin')) {
-      db.prepare("UPDATE users SET role = ? WHERE id = ?").run(role, userId);
+      await execute('UPDATE users SET role = ? WHERE id = ?', [role, userId]);
     }
 
     return NextResponse.json({ success: true, message: 'User updated successfully' });

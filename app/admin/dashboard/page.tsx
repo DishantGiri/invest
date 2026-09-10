@@ -22,7 +22,12 @@ import {
   Percent,
   Save,
   Upload,
-  ImageIcon
+  ImageIcon,
+  Key,
+  Lock,
+  User,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { showToast } from '@/components/Toast';
 
@@ -49,6 +54,18 @@ export default function AdminDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [savingSettings, setSavingSettings] = useState(false);
   const [uploadingQrKey, setUploadingQrKey] = useState<string | null>(null);
+
+  // Admin Credentials state
+  const [adminCreds, setAdminCreds] = useState({
+    phone_or_email: '',
+    current_password: '',
+    new_password: '',
+    confirm_password: ''
+  });
+  const [updatingCreds, setUpdatingCreds] = useState(false);
+  const [showCurrentPass, setShowCurrentPass] = useState(false);
+  const [showNewPass, setShowNewPass] = useState(false);
+  const [showConfirmPass, setShowConfirmPass] = useState(false);
 
   // User edit modal state
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
@@ -97,12 +114,72 @@ export default function AdminDashboardPage() {
       const setRes = await fetch('/api/admin/settings');
       const setData = await setRes.json();
       if (setData.settings) setSettings(setData.settings);
+
+      const profRes = await fetch('/api/user/profile');
+      const profData = await profRes.json();
+      if (profData.user) {
+        setAdminCreds((prev) => ({
+          ...prev,
+          phone_or_email: profData.user.phone_or_email || ''
+        }));
+      }
     } catch {
       showToast('Failed to load admin dataset', 'error');
     } finally {
       setLoading(false);
     }
   }, [router]);
+
+  const handleUpdateAdminCredentials = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!adminCreds.current_password) {
+      showToast('Please enter your current password to authorize changes.', 'error');
+      return;
+    }
+
+    if (adminCreds.new_password && adminCreds.new_password !== adminCreds.confirm_password) {
+      showToast('New password and confirm password do not match!', 'error');
+      return;
+    }
+
+    if (adminCreds.new_password && adminCreds.new_password.length < 6) {
+      showToast('New password must be at least 6 characters long.', 'error');
+      return;
+    }
+
+    setUpdatingCreds(true);
+    try {
+      const res = await fetch('/api/admin/credentials', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          phone_or_email: adminCreds.phone_or_email,
+          current_password: adminCreds.current_password,
+          new_password: adminCreds.new_password
+        })
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        showToast(data.error || 'Failed to update credentials', 'error');
+        return;
+      }
+
+      showToast(data.message || 'Admin ID/Password updated successfully!', 'success');
+      setAdminCreds((prev) => ({
+        ...prev,
+        phone_or_email: data.user?.phone_or_email || prev.phone_or_email,
+        current_password: '',
+        new_password: '',
+        confirm_password: ''
+      }));
+    } catch {
+      showToast('Network error while updating credentials', 'error');
+    } finally {
+      setUpdatingCreds(false);
+    }
+  };
 
   useEffect(() => {
     fetchAdminData();
@@ -275,11 +352,11 @@ export default function AdminDashboardPage() {
       {/* Admin Header */}
       <div className="bg-slate-900 rounded-3xl p-6 text-white shadow-2xl flex flex-col md:flex-row justify-between items-start md:items-center border border-slate-800 gap-4">
         <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 text-emerald-400 flex items-center justify-center font-bold">
+          <div className="w-12 h-12 rounded-2xl bg-blue-500/20 border border-blue-400/40 text-cyan-400 flex items-center justify-center font-bold">
             <ShieldCheck className="w-7 h-7" />
           </div>
           <div>
-            <h2 className="text-lg font-black text-emerald-400">CATL Master Admin Control Center</h2>
+            <h2 className="text-lg font-black text-cyan-400">CATL Master Admin Control Center</h2>
             <p className="text-xs text-slate-400">Full System Control, Referral % & QR Image File Uploads</p>
           </div>
         </div>
@@ -297,7 +374,7 @@ export default function AdminDashboardPage() {
         <button
           onClick={() => setActiveTab('overview')}
           className={`flex-1 py-2.5 px-4 rounded-xl whitespace-nowrap transition-all ${
-            activeTab === 'overview' ? 'bg-slate-900 text-emerald-400 shadow' : 'text-slate-600 hover:text-slate-900'
+            activeTab === 'overview' ? 'bg-slate-900 text-cyan-400 shadow' : 'text-slate-600 hover:text-slate-900'
           }`}
         >
           Overview
@@ -305,7 +382,7 @@ export default function AdminDashboardPage() {
         <button
           onClick={() => setActiveTab('recharges')}
           className={`flex-1 py-2.5 px-4 rounded-xl whitespace-nowrap transition-all flex items-center justify-center ${
-            activeTab === 'recharges' ? 'bg-slate-900 text-emerald-400 shadow' : 'text-slate-600 hover:text-slate-900'
+            activeTab === 'recharges' ? 'bg-slate-900 text-cyan-400 shadow' : 'text-slate-600 hover:text-slate-900'
           }`}
         >
           Recharges
@@ -318,7 +395,7 @@ export default function AdminDashboardPage() {
         <button
           onClick={() => setActiveTab('withdrawals')}
           className={`flex-1 py-2.5 px-4 rounded-xl whitespace-nowrap transition-all flex items-center justify-center ${
-            activeTab === 'withdrawals' ? 'bg-slate-900 text-emerald-400 shadow' : 'text-slate-600 hover:text-slate-900'
+            activeTab === 'withdrawals' ? 'bg-slate-900 text-cyan-400 shadow' : 'text-slate-600 hover:text-slate-900'
           }`}
         >
           Withdrawals
@@ -331,7 +408,7 @@ export default function AdminDashboardPage() {
         <button
           onClick={() => setActiveTab('users')}
           className={`flex-1 py-2.5 px-4 rounded-xl whitespace-nowrap transition-all ${
-            activeTab === 'users' ? 'bg-slate-900 text-emerald-400 shadow' : 'text-slate-600 hover:text-slate-900'
+            activeTab === 'users' ? 'bg-slate-900 text-cyan-400 shadow' : 'text-slate-600 hover:text-slate-900'
           }`}
         >
           Users
@@ -339,7 +416,7 @@ export default function AdminDashboardPage() {
         <button
           onClick={() => setActiveTab('plans')}
           className={`flex-1 py-2.5 px-4 rounded-xl whitespace-nowrap transition-all ${
-            activeTab === 'plans' ? 'bg-slate-900 text-emerald-400 shadow' : 'text-slate-600 hover:text-slate-900'
+            activeTab === 'plans' ? 'bg-slate-900 text-cyan-400 shadow' : 'text-slate-600 hover:text-slate-900'
           }`}
         >
           Plans
@@ -347,7 +424,7 @@ export default function AdminDashboardPage() {
         <button
           onClick={() => setActiveTab('settings')}
           className={`flex-1 py-2.5 px-4 rounded-xl whitespace-nowrap transition-all flex items-center justify-center ${
-            activeTab === 'settings' ? 'bg-emerald-600 text-white shadow' : 'text-slate-700 hover:text-slate-900 font-black'
+            activeTab === 'settings' ? 'bg-blue-600 text-white shadow' : 'text-slate-700 hover:text-slate-900 font-black'
           }`}
         >
           <Sliders className="w-3.5 h-3.5 mr-1" />
@@ -365,7 +442,7 @@ export default function AdminDashboardPage() {
             </div>
             <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm">
               <span className="text-[10px] text-slate-400 font-bold uppercase">Total User Balances</span>
-              <p className="text-2xl font-black text-emerald-600 mt-1">NPR {stats.totalUserBalance.toFixed(2)}</p>
+              <p className="text-2xl font-black text-blue-600 mt-1">NPR {stats.totalUserBalance.toFixed(2)}</p>
             </div>
             <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm">
               <span className="text-[10px] text-slate-400 font-bold uppercase">Active Investments</span>
@@ -381,13 +458,133 @@ export default function AdminDashboardPage() {
         </div>
       )}
 
-      {/* SETTINGS & QR IMAGE FILE UPLOADS */}
+      {/* SETTINGS & ADMIN SECURITY & QR IMAGE FILE UPLOADS */}
       {activeTab === 'settings' && (
-        <form onSubmit={handleSaveSettings} className="space-y-6">
+        <div className="space-y-6">
+          {/* Admin Security & Account Credentials Card */}
+          <div className="bg-slate-900 text-white p-6 rounded-3xl border border-slate-800 shadow-xl space-y-4">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/30 text-cyan-400 flex items-center justify-center font-bold">
+                <Key className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-sm font-black text-cyan-400 uppercase tracking-wider">
+                  Change Admin ID & Password
+                </h3>
+                <p className="text-xs text-slate-400">
+                  Update your system administrator login email/username and password securely.
+                </p>
+              </div>
+            </div>
+
+            <form onSubmit={handleUpdateAdminCredentials} className="space-y-4 pt-2 text-xs">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-300 uppercase mb-1">
+                    Admin ID / Email / Username
+                  </label>
+                  <div className="relative">
+                    <User className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <input
+                      type="text"
+                      required
+                      placeholder="admin@catl.com"
+                      className="w-full pl-10 pr-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl font-medium text-white focus:outline-none focus:border-blue-500"
+                      value={adminCreds.phone_or_email}
+                      onChange={(e) => setAdminCreds({ ...adminCreds, phone_or_email: e.target.value })}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-300 uppercase mb-1">
+                    Current Admin Password <span className="text-rose-400">* Required</span>
+                  </label>
+                  <div className="relative">
+                    <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <input
+                      type={showCurrentPass ? 'text' : 'password'}
+                      required
+                      placeholder="••••••••"
+                      className="w-full pl-10 pr-10 py-2.5 bg-slate-950 border border-slate-800 rounded-xl font-medium text-white focus:outline-none focus:border-blue-500"
+                      value={adminCreds.current_password}
+                      onChange={(e) => setAdminCreds({ ...adminCreds, current_password: e.target.value })}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowCurrentPass(!showCurrentPass)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+                    >
+                      {showCurrentPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-300 uppercase mb-1">
+                    New Password (Leave blank to keep current)
+                  </label>
+                  <div className="relative">
+                    <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <input
+                      type={showNewPass ? 'text' : 'password'}
+                      placeholder="••••••••"
+                      className="w-full pl-10 pr-10 py-2.5 bg-slate-950 border border-slate-800 rounded-xl font-medium text-white focus:outline-none focus:border-blue-500"
+                      value={adminCreds.new_password}
+                      onChange={(e) => setAdminCreds({ ...adminCreds, new_password: e.target.value })}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowNewPass(!showNewPass)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+                    >
+                      {showNewPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-300 uppercase mb-1">
+                    Confirm New Password
+                  </label>
+                  <div className="relative">
+                    <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <input
+                      type={showConfirmPass ? 'text' : 'password'}
+                      placeholder="••••••••"
+                      className="w-full pl-10 pr-10 py-2.5 bg-slate-950 border border-slate-800 rounded-xl font-medium text-white focus:outline-none focus:border-blue-500"
+                      value={adminCreds.confirm_password}
+                      onChange={(e) => setAdminCreds({ ...adminCreds, confirm_password: e.target.value })}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPass(!showConfirmPass)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+                    >
+                      {showConfirmPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={updatingCreds}
+                className="py-3 px-6 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl shadow-lg shadow-blue-600/30 flex items-center justify-center space-x-2 transition-all disabled:opacity-50"
+              >
+                <Save className="w-4 h-4" />
+                <span>{updatingCreds ? 'Updating Credentials...' : 'Save New Admin Credentials'}</span>
+              </button>
+            </form>
+          </div>
+
+          <form onSubmit={handleSaveSettings} className="space-y-6">
           {/* Referral Commission Control Box */}
           <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
             <h3 className="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center">
-              <Percent className="w-5 h-5 text-emerald-600 mr-2" />
+              <Percent className="w-5 h-5 text-blue-600 mr-2" />
               Referral Commission Percentage Settings
             </h3>
             <p className="text-xs text-slate-500">
@@ -405,7 +602,7 @@ export default function AdminDashboardPage() {
                   min="0"
                   max="100"
                   required
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-black text-emerald-600"
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-black text-blue-600"
                   value={settings.tier1_referral_percent || '10'}
                   onChange={(e) => setSettings({ ...settings, tier1_referral_percent: e.target.value })}
                 />
@@ -421,7 +618,7 @@ export default function AdminDashboardPage() {
                   min="0"
                   max="100"
                   required
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-black text-emerald-600"
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-black text-blue-600"
                   value={settings.tier2_referral_percent || '3'}
                   onChange={(e) => setSettings({ ...settings, tier2_referral_percent: e.target.value })}
                 />
@@ -432,7 +629,7 @@ export default function AdminDashboardPage() {
           {/* Payment Account Details & File Upload for Payment QR */}
           <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
             <h3 className="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center">
-              <QrCode className="w-5 h-5 text-emerald-600 mr-2" />
+              <QrCode className="w-5 h-5 text-blue-600 mr-2" />
               Payment Accounts & Direct Image Upload for QR Codes
             </h3>
             <p className="text-xs text-slate-500">
@@ -476,13 +673,13 @@ export default function AdminDashboardPage() {
                       />
                       <label
                         htmlFor="esewa-qr-upload"
-                        className="cursor-pointer px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl flex items-center space-x-1.5 text-xs shadow-sm"
+                        className="cursor-pointer px-3 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl flex items-center space-x-1.5 text-xs shadow-sm"
                       >
                         <Upload className="w-3.5 h-3.5" />
                         <span>{uploadingQrKey === 'esewa_qr_image' ? 'Uploading...' : 'Choose QR File'}</span>
                       </label>
                       {settings.esewa_qr_image && (
-                        <span className="text-[10px] font-mono text-emerald-700 font-bold truncate max-w-[100px]">
+                        <span className="text-[10px] font-mono text-blue-700 font-bold truncate max-w-[100px]">
                           {settings.esewa_qr_image}
                         </span>
                       )}
@@ -527,7 +724,7 @@ export default function AdminDashboardPage() {
                       />
                       <label
                         htmlFor="khalti-qr-upload"
-                        className="cursor-pointer px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl flex items-center space-x-1.5 text-xs shadow-sm"
+                        className="cursor-pointer px-3 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl flex items-center space-x-1.5 text-xs shadow-sm"
                       >
                         <Upload className="w-3.5 h-3.5" />
                         <span>{uploadingQrKey === 'khalti_qr_image' ? 'Uploading...' : 'Choose QR File'}</span>
@@ -573,7 +770,7 @@ export default function AdminDashboardPage() {
                       />
                       <label
                         htmlFor="bank-qr-upload"
-                        className="cursor-pointer px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl flex items-center space-x-1.5 text-xs shadow-sm"
+                        className="cursor-pointer px-3 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl flex items-center space-x-1.5 text-xs shadow-sm"
                       >
                         <Upload className="w-3.5 h-3.5" />
                         <span>{uploadingQrKey === 'bank_qr_image' ? 'Uploading...' : 'Choose QR File'}</span>
@@ -588,13 +785,14 @@ export default function AdminDashboardPage() {
           <button
             type="submit"
             disabled={savingSettings}
-            className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-2xl text-sm shadow-xl shadow-emerald-600/30 flex items-center justify-center space-x-2 transition-all"
+            className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-black rounded-2xl text-sm shadow-xl shadow-blue-600/30 flex items-center justify-center space-x-2 transition-all"
           >
             <Save className="w-4 h-4" />
             <span>{savingSettings ? 'Saving Settings...' : 'Save All Admin Settings & Payment Details'}</span>
           </button>
         </form>
-      )}
+      </div>
+    )}
 
       {/* RECHARGES TAB */}
       {activeTab === 'recharges' && (
@@ -613,7 +811,7 @@ export default function AdminDashboardPage() {
                       <p className="font-bold text-slate-900">{r.full_name} ({r.phone_or_email})</p>
                       <p className="text-[10px] text-slate-400">{new Date(r.created_at).toLocaleString()}</p>
                     </div>
-                    <span className="text-sm font-black text-emerald-600">NPR {r.amount.toFixed(2)}</span>
+                    <span className="text-sm font-black text-blue-600">NPR {r.amount.toFixed(2)}</span>
                   </div>
 
                   <div className="bg-slate-50 p-2.5 rounded-xl font-mono text-[11px] text-slate-700">
@@ -622,7 +820,7 @@ export default function AdminDashboardPage() {
 
                   <div className="flex justify-between items-center pt-1">
                     <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded uppercase ${
-                      r.status === 'approved' ? 'bg-emerald-100 text-emerald-700' : r.status === 'rejected' ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-700'
+                      r.status === 'approved' ? 'bg-blue-50 text-blue-700' : r.status === 'rejected' ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-700'
                     }`}>
                       {r.status}
                     </span>
@@ -637,7 +835,7 @@ export default function AdminDashboardPage() {
                         </button>
                         <button
                           onClick={() => handleRechargeAction(r.id, 'approve')}
-                          className="px-3 py-1.5 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-500 shadow-md shadow-emerald-600/30"
+                          className="px-3 py-1.5 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-500 shadow-md shadow-blue-600/30"
                         >
                           Approve Deposit
                         </button>
@@ -677,7 +875,7 @@ export default function AdminDashboardPage() {
 
                   <div className="flex justify-between items-center pt-1">
                     <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded uppercase ${
-                      w.status === 'approved' ? 'bg-emerald-100 text-emerald-700' : w.status === 'rejected' ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-700'
+                      w.status === 'approved' ? 'bg-blue-50 text-blue-700' : w.status === 'rejected' ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-700'
                     }`}>
                       {w.status}
                     </span>
@@ -692,7 +890,7 @@ export default function AdminDashboardPage() {
                         </button>
                         <button
                           onClick={() => handleWithdrawalAction(w.id, 'approve')}
-                          className="px-3 py-1.5 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-500 shadow-md shadow-emerald-600/30"
+                          className="px-3 py-1.5 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-500 shadow-md shadow-blue-600/30"
                         >
                           Approve Payout
                         </button>
@@ -725,7 +923,7 @@ export default function AdminDashboardPage() {
                 <div className="text-right flex items-center space-x-3">
                   <div>
                     <span className="text-[9px] text-slate-400 font-semibold block">Balance</span>
-                    <span className="font-black text-emerald-600 text-sm">NPR {u.balance.toFixed(2)}</span>
+                    <span className="font-black text-blue-600 text-sm">NPR {u.balance.toFixed(2)}</span>
                   </div>
                   <button
                     onClick={() => {
@@ -755,7 +953,7 @@ export default function AdminDashboardPage() {
                 setPlanForm({ id: '', name: '', price: '', daily_income: '', duration_days: '150', vip_level: '1', badge_text: 'VIP 1' });
                 setShowPlanModal(true);
               }}
-              className="py-2 px-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs flex items-center"
+              className="py-2 px-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl text-xs flex items-center"
             >
               <Plus className="w-4 h-4 mr-1" />
               Add Plan
@@ -768,9 +966,9 @@ export default function AdminDashboardPage() {
                 <div className="flex justify-between items-center">
                   <div>
                     <h4 className="font-bold text-slate-900">{p.name}</h4>
-                    <p className="text-emerald-600 font-black text-sm">NPR {p.price.toFixed(2)}</p>
+                    <p className="text-blue-600 font-black text-sm">NPR {p.price.toFixed(2)}</p>
                   </div>
-                  <span className="bg-emerald-600 text-white text-[10px] font-extrabold px-2.5 py-0.5 rounded-lg">
+                  <span className="bg-blue-600 text-white text-[10px] font-extrabold px-2.5 py-0.5 rounded-lg">
                     {p.badge_text || `VIP ${p.vip_level}`}
                   </span>
                 </div>
@@ -778,7 +976,7 @@ export default function AdminDashboardPage() {
                 <div className="grid grid-cols-3 gap-2 bg-slate-50 p-2.5 rounded-xl text-center">
                   <div>
                     <span className="text-[9px] text-slate-400 font-semibold uppercase block">Daily Income</span>
-                    <span className="font-bold text-emerald-600">NPR {p.daily_income.toFixed(2)}</span>
+                    <span className="font-bold text-blue-600">NPR {p.daily_income.toFixed(2)}</span>
                   </div>
                   <div>
                     <span className="text-[9px] text-slate-400 font-semibold uppercase block">Total Revenue</span>
@@ -794,7 +992,7 @@ export default function AdminDashboardPage() {
                   <button
                     onClick={() => handleTogglePlan(p.id, p.status)}
                     className={`px-3 py-1 rounded-lg text-[10px] font-bold uppercase ${
-                      p.status === 1 ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-600'
+                      p.status === 1 ? 'bg-blue-50 text-blue-700' : 'bg-slate-200 text-slate-600'
                     }`}
                   >
                     {p.status === 1 ? 'Active' : 'Disabled'}
@@ -841,7 +1039,7 @@ export default function AdminDashboardPage() {
                   type="number"
                   step="0.01"
                   required
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-emerald-600 text-base focus:outline-none"
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-blue-600 text-base focus:outline-none"
                   value={newBalance}
                   onChange={(e) => setNewBalance(e.target.value)}
                 />
@@ -849,7 +1047,7 @@ export default function AdminDashboardPage() {
 
               <button
                 type="submit"
-                className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow-lg"
+                className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl shadow-lg"
               >
                 Update Wallet Balance
               </button>
@@ -886,7 +1084,7 @@ export default function AdminDashboardPage() {
                   <input
                     type="number"
                     required
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-bold text-emerald-600"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-bold text-blue-600"
                     value={planForm.price}
                     onChange={(e) => setPlanForm({ ...planForm, price: e.target.value })}
                   />
@@ -896,7 +1094,7 @@ export default function AdminDashboardPage() {
                   <input
                     type="number"
                     required
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-bold text-emerald-600"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-bold text-blue-600"
                     value={planForm.daily_income}
                     onChange={(e) => setPlanForm({ ...planForm, daily_income: e.target.value })}
                   />
@@ -928,7 +1126,7 @@ export default function AdminDashboardPage() {
 
               <button
                 type="submit"
-                className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow-lg"
+                className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl shadow-lg"
               >
                 Save Investment Plan
               </button>

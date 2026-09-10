@@ -9,7 +9,7 @@ export async function GET() {
       return NextResponse.json({ error: 'Access denied' }, { status: 403 });
     }
 
-    const settings = getSystemSettings();
+    const settings = await getSystemSettings();
     return NextResponse.json({ success: true, settings });
   } catch (error: any) {
     return NextResponse.json({ error: 'Failed to fetch settings' }, { status: 500 });
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
 
     for (const [key, value] of Object.entries(body)) {
       if (typeof value === 'string' || typeof value === 'number') {
-        updateSystemSetting(key, String(value));
+        await updateSystemSetting(key, String(value));
       }
     }
 

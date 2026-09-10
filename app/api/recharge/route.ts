@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSessionUser } from '@/lib/auth';
-import db, { getSystemSettings } from '@/lib/db';
+import { query, queryOne, getSystemSettings } from '@/lib/db';
 
 export async function GET() {
   try {
@@ -9,13 +9,13 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const recharges = db.prepare(`
+    const recharges = await query(`
       SELECT * FROM transactions
       WHERE user_id = ? AND type = 'recharge'
       ORDER BY id DESC
-    `).all(session.id);
+    `, [session.id]);
 
-    const settings = getSystemSettings();
+    const settings = await getSystemSettings();
 
     return NextResponse.json({ success: true, recharges, settings });
   } catch (error: any) {
@@ -50,15 +50,16 @@ export async function POST(req: Request) {
       detailsStr += ` | ${sender_info.trim()}`;
     }
 
-    const result = db.prepare(`
+    const result = await queryOne<{ id: number }>(`
       INSERT INTO transactions (user_id, type, amount, status, payment_method, payment_details)
       VALUES (?, 'recharge', ?, 'pending', ?, ?)
-    `).run(session.id, depositAmount, payment_method, detailsStr);
+      RETURNING id
+    `, [session.id, depositAmount, payment_method, detailsStr]);
 
     return NextResponse.json({
       success: true,
       message: 'Recharge request submitted successfully! Pending approval from CATL Admin.',
-      transactionId: result.lastInsertRowid
+      transactionId: result?.id
     });
   } catch (error: any) {
     console.error('Recharge error:', error);

@@ -47,7 +47,7 @@ export default function BottomNav() {
               key={item.path}
               href={item.path}
               className={`flex flex-col items-center justify-center w-full h-full text-xs font-medium transition-colors ${
-                isActive ? 'text-emerald-600 font-bold' : 'text-slate-500 hover:text-slate-700'
+                isActive ? 'text-blue-600 font-bold' : 'text-slate-500 hover:text-slate-700'
               }`}
             >
               <Icon className={`w-5 h-5 mb-1 ${isActive ? 'stroke-[2.5px] scale-110' : 'stroke-[1.75px]'}`} />

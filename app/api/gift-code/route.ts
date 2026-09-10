@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSessionUser } from '@/lib/auth';
-import db from '@/lib/db';
+import { queryOne, withTransaction } from '@/lib/db';
 
 export async function POST(req: Request) {
   try {
@@ -16,7 +16,7 @@ export async function POST(req: Request) {
 
     const inputCode = code.trim().toUpperCase();
 
-    const gift = db.prepare("SELECT * FROM gift_codes WHERE code = ?").get(inputCode) as any;
+    const gift = await queryOne('SELECT * FROM gift_codes WHERE code = ?', [inputCode]) as any;
     if (!gift) {
       return NextResponse.json({ error: 'Invalid gift code' }, { status: 400 });
     }
@@ -26,33 +26,37 @@ export async function POST(req: Request) {
     }
 
     // Check if user already claimed this gift code
-    const alreadyClaimed = db.prepare("SELECT id FROM user_gift_claims WHERE user_id = ? AND gift_code_id = ?")
-      .get(session.id, gift.id);
+    const alreadyClaimed = await queryOne(
+      'SELECT id FROM user_gift_claims WHERE user_id = ? AND gift_code_id = ?',
+      [session.id, gift.id]
+    );
 
     if (alreadyClaimed) {
       return NextResponse.json({ error: 'You have already redeemed this gift code!' }, { status: 400 });
     }
 
-    const claimTx = db.transaction(() => {
+    await withTransaction(async (client) => {
       // 1. Record gift claim
-      db.prepare("INSERT INTO user_gift_claims (user_id, gift_code_id, claimed_amount) VALUES (?, ?, ?)")
-        .run(session.id, gift.id, gift.amount);
+      await client.query(
+        'INSERT INTO user_gift_claims (user_id, gift_code_id, claimed_amount) VALUES ($1, $2, $3)',
+        [session.id, gift.id, gift.amount]
+      );
 
       // 2. Increment gift code times_used
-      db.prepare("UPDATE gift_codes SET times_used = times_used + 1 WHERE id = ?").run(gift.id);
+      await client.query('UPDATE gift_codes SET times_used = times_used + 1 WHERE id = $1', [gift.id]);
 
       // 3. Credit user balance
-      db.prepare("UPDATE users SET balance = balance + ?, total_income = total_income + ? WHERE id = ?")
-        .run(gift.amount, gift.amount, session.id);
+      await client.query(
+        'UPDATE users SET balance = balance + $1, total_income = total_income + $2 WHERE id = $3',
+        [gift.amount, gift.amount, session.id]
+      );
 
       // 4. Record transaction
-      db.prepare(`
+      await client.query(`
         INSERT INTO transactions (user_id, type, amount, status, payment_method, payment_details)
-        VALUES (?, 'gift_code', ?, 'completed', 'Promo Gift Code', ?)
-      `).run(session.id, gift.amount, `Redeemed Gift Code: ${inputCode}`);
+        VALUES ($1, 'gift_code', $2, 'completed', 'Promo Gift Code', $3)
+      `, [session.id, gift.amount, `Redeemed Gift Code: ${inputCode}`]);
     });
-
-    claimTx();
 
     return NextResponse.json({
       success: true,

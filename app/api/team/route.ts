@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSessionUser } from '@/lib/auth';
-import db, { getSystemSettings } from '@/lib/db';
+import { query, queryOne, getSystemSettings } from '@/lib/db';
 
 export async function GET() {
   try {
@@ -9,37 +9,37 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const user = db.prepare("SELECT referral_code FROM users WHERE id = ?").get(session.id) as any;
+    const user = await queryOne<{ referral_code: string }>('SELECT referral_code FROM users WHERE id = ?', [session.id]);
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    const settings = getSystemSettings();
+    const settings = await getSystemSettings();
 
     // Direct Tier 1 Referrals
-    const tier1Members = db.prepare(`
-      SELECT id, phone_or_email, full_name, created_at,
-             (SELECT SUM(invest_price) FROM user_investments WHERE user_id = users.id) as total_invested
+    const tier1Members = await query<any>(`
+      SELECT id, phone_or_email, full_name, referral_code, created_at,
+             COALESCE((SELECT SUM(invest_price) FROM user_investments WHERE user_id = users.id), 0) as total_invested
       FROM users
       WHERE referred_by = ?
       ORDER BY id DESC
-    `).all(user.referral_code);
+    `, [user.referral_code]);
 
     // Tier 2 Referral Count
     const tier1Codes = tier1Members.map((m: any) => m.referral_code).filter(Boolean);
     let tier2Count = 0;
     if (tier1Codes.length > 0) {
       const placeholders = tier1Codes.map(() => '?').join(',');
-      const result = db.prepare(`SELECT COUNT(*) as count FROM users WHERE referred_by IN (${placeholders})`).get(...tier1Codes) as any;
-      tier2Count = result?.count || 0;
+      const result = await queryOne<{ count: any }>(`SELECT COUNT(*) as count FROM users WHERE referred_by IN (${placeholders})`, tier1Codes);
+      tier2Count = parseInt(result?.count || 0, 10);
     }
 
     // Total Referral Commission Earned
-    const commissionSum = db.prepare(`
+    const commissionSum = await queryOne<{ total: any }>(`
       SELECT SUM(amount) as total FROM referral_commissions WHERE referrer_id = ?
-    `).get(session.id) as any;
+    `, [session.id]);
 
-    const totalCommission = commissionSum?.total || 0;
+    const totalCommission = parseFloat(commissionSum?.total || 0);
 
     return NextResponse.json({
       success: true,

@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     const body = await req.json().catch(() => ({}));
     const investmentId = body.investmentId ? Number(body.investmentId) : undefined;
 
-    const result = claimInvestmentProfits(session.id, investmentId);
+    const result = await claimInvestmentProfits(session.id, investmentId);
 
     if (result.totalClaimedNow <= 0) {
       return NextResponse.json({

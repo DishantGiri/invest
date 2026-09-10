@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSessionUser } from '@/lib/auth';
-import db from '@/lib/db';
+import { query } from '@/lib/db';
 import { calculateClaimableIncome, UserInvestment } from '@/lib/income';
 
 export async function GET() {
@@ -10,14 +10,14 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const investments = db.prepare("SELECT * FROM user_investments WHERE user_id = ? ORDER BY id DESC").all(session.id) as UserInvestment[];
+    const investments = await query<UserInvestment>('SELECT * FROM user_investments WHERE user_id = ? ORDER BY id DESC', [session.id]);
 
     let totalActiveInvestmentValue = 0;
     let totalClaimableAmount = 0;
 
     const enrichedInvestments = investments.map(inv => {
       if (inv.status === 'active') {
-        totalActiveInvestmentValue += inv.invest_price;
+        totalActiveInvestmentValue += Number(inv.invest_price);
       }
 
       const claimStats = calculateClaimableIncome(inv);

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSessionUser } from '@/lib/auth';
-import db from '@/lib/db';
+import { query, queryOne, withTransaction } from '@/lib/db';
 
 export async function GET() {
   try {
@@ -9,11 +9,11 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const withdrawals = db.prepare(`
+    const withdrawals = await query(`
       SELECT * FROM transactions
       WHERE user_id = ? AND type = 'withdrawal'
       ORDER BY id DESC
-    `).all(session.id);
+    `, [session.id]);
 
     return NextResponse.json({ success: true, withdrawals });
   } catch (error: any) {
@@ -40,7 +40,10 @@ export async function POST(req: Request) {
     }
 
     // Get fresh user balance
-    const user = db.prepare("SELECT balance FROM users WHERE id = ?").get(session.id) as any;
+    const user = await queryOne('SELECT balance FROM users WHERE id = ?', [session.id]) as any;
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
 
     if (user.balance < withdrawAmount) {
       return NextResponse.json({
@@ -50,21 +53,22 @@ export async function POST(req: Request) {
 
     const detailsStr = `${bank_name.trim()} - A/C: ${account_number.trim()} (${account_name.trim()})`;
 
-    const withdrawTx = db.transaction(() => {
+    const transactionId = await withTransaction(async (client) => {
       // 1. Deduct balance from user wallet immediately (pending review)
-      db.prepare("UPDATE users SET balance = balance - ?, bank_name = ?, account_name = ?, account_number = ? WHERE id = ?")
-        .run(withdrawAmount, bank_name.trim(), account_name.trim(), account_number.trim(), session.id);
+      await client.query(
+        'UPDATE users SET balance = balance - $1, bank_name = $2, account_name = $3, account_number = $4 WHERE id = $5',
+        [withdrawAmount, bank_name.trim(), account_name.trim(), account_number.trim(), session.id]
+      );
 
       // 2. Create pending withdrawal transaction
-      const result = db.prepare(`
+      const res = await client.query(`
         INSERT INTO transactions (user_id, type, amount, status, payment_method, payment_details)
-        VALUES (?, 'withdrawal', ?, 'pending', ?, ?)
-      `).run(session.id, withdrawAmount, bank_name.trim(), detailsStr);
+        VALUES ($1, 'withdrawal', $2, 'pending', $3, $4)
+        RETURNING id
+      `, [session.id, withdrawAmount, bank_name.trim(), detailsStr]);
 
-      return result.lastInsertRowid;
+      return res.rows[0]?.id;
     });
-
-    const transactionId = withdrawTx();
 
     return NextResponse.json({
       success: true,

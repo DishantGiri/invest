@@ -94,9 +94,9 @@ export default function WithdrawPage() {
   };
 
   return (
-    <div className="px-4 py-5 space-y-4">
-      {/* Header Banner matching screenshot */}
-      <div className="bg-gradient-to-r from-orange-950 via-amber-900 to-slate-900 rounded-3xl p-5 text-white shadow-xl">
+    <div className="px-4 py-5 space-y-4 max-w-4xl mx-auto">
+      {/* Header Banner */}
+      <div className="bg-gradient-to-r from-slate-950 via-slate-900 to-blue-950 rounded-3xl p-5 text-white shadow-xl border border-slate-800">
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-2xl bg-orange-600 text-white flex items-center justify-center font-bold">
@@ -104,14 +104,14 @@ export default function WithdrawPage() {
             </div>
             <div>
               <h2 className="text-lg font-black text-orange-400">Withdraw Funds</h2>
-              <p className="text-xs text-orange-200/80">
+              <p className="text-xs text-slate-300">
                 Fast Payout to Bank / eSewa / Khalti
               </p>
             </div>
           </div>
           <div className="text-right">
-            <span className="text-[10px] text-orange-200 font-semibold uppercase block">Available Balance</span>
-            <span className="text-lg font-black text-emerald-400">NPR {balance.toFixed(2)}</span>
+            <span className="text-[10px] text-sky-300 font-semibold uppercase block">Available Balance</span>
+            <span className="text-lg font-black text-cyan-400">NPR {balance.toFixed(2)}</span>
           </div>
         </div>
       </div>
@@ -128,7 +128,7 @@ export default function WithdrawPage() {
               min="100"
               required
               placeholder="Min NPR 100"
-              className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-emerald-600 focus:outline-none focus:border-emerald-500"
+              className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-blue-600 focus:outline-none focus:border-blue-500"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
             />
@@ -139,7 +139,7 @@ export default function WithdrawPage() {
               Payment Channel / Bank Name
             </label>
             <select
-              className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-emerald-500"
+              className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-blue-500"
               value={bankName}
               onChange={(e) => setBankName(e.target.value)}
             >
@@ -163,7 +163,7 @@ export default function WithdrawPage() {
                 type="text"
                 required
                 placeholder="Full Name as registered in Bank/eSewa"
-                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-emerald-500"
+                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-blue-500"
                 value={accountName}
                 onChange={(e) => setAccountName(e.target.value)}
               />
@@ -180,7 +180,7 @@ export default function WithdrawPage() {
                 type="text"
                 required
                 placeholder="Bank Account No. / Mobile Wallet No."
-                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:border-emerald-500"
+                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:border-blue-500"
                 value={accountNumber}
                 onChange={(e) => setAccountNumber(e.target.value)}
               />
@@ -223,7 +223,7 @@ export default function WithdrawPage() {
                 <span
                   className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase flex items-center ${
                     item.status === 'approved'
-                      ? 'bg-emerald-100 text-emerald-700'
+                      ? 'bg-blue-50 text-blue-700'
                       : item.status === 'rejected'
                       ? 'bg-rose-100 text-rose-700'
                       : 'bg-amber-100 text-amber-700'

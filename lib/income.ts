@@ -1,4 +1,4 @@
-import db from './db';
+import { query, withTransaction } from './db';
 
 export interface UserInvestment {
   id: number;
@@ -45,18 +45,19 @@ export function calculateClaimableIncome(investment: UserInvestment) {
   };
 }
 
-export function claimInvestmentProfits(userId: number, investmentId?: number) {
-  const query = investmentId
-    ? db.prepare("SELECT * FROM user_investments WHERE user_id = ? AND id = ? AND status = 'active'").all(userId, investmentId)
-    : db.prepare("SELECT * FROM user_investments WHERE user_id = ? AND status = 'active'").all(userId);
+export async function claimInvestmentProfits(userId: number, investmentId?: number) {
+  const sql = investmentId
+    ? "SELECT * FROM user_investments WHERE user_id = ? AND id = ? AND status = 'active'"
+    : "SELECT * FROM user_investments WHERE user_id = ? AND status = 'active'";
+  const params = investmentId ? [userId, investmentId] : [userId];
 
-  const investments = query as UserInvestment[];
+  const investments = await query<UserInvestment>(sql, params);
   let totalClaimedNow = 0;
   let totalDaysClaimed = 0;
 
   const nowIso = new Date().toISOString();
 
-  const claimTransaction = db.transaction(() => {
+  await withTransaction(async (client) => {
     for (const inv of investments) {
       const { claimableDays, claimableAmount } = calculateClaimableIncome(inv);
 
@@ -66,34 +67,35 @@ export function claimInvestmentProfits(userId: number, investmentId?: number) {
         const newStatus = newDaysPassed >= inv.duration_days ? 'completed' : 'active';
 
         // Update investment record
-        db.prepare(`
-          UPDATE user_investments
-          SET total_claimed = ?, days_passed = ?, last_claim_at = ?, status = ?
-          WHERE id = ?
-        `).run(newTotalClaimed, newDaysPassed, nowIso, newStatus, inv.id);
+        await client.query(
+          `UPDATE user_investments
+           SET total_claimed = $1, days_passed = $2, last_claim_at = $3, status = $4
+           WHERE id = $5`,
+          [newTotalClaimed, newDaysPassed, nowIso, newStatus, inv.id]
+        );
 
         totalClaimedNow += claimableAmount;
         totalDaysClaimed += claimableDays;
 
         // Record transaction
-        db.prepare(`
-          INSERT INTO transactions (user_id, type, amount, status, payment_method, payment_details)
-          VALUES (?, 'daily_income', ?, 'completed', 'Auto Claim Engine', ?)
-        `).run(userId, claimableAmount, `Daily income for ${inv.plan_name} (${claimableDays} days)`);
+        await client.query(
+          `INSERT INTO transactions (user_id, type, amount, status, payment_method, payment_details)
+           VALUES ($1, 'daily_income', $2, 'completed', 'Auto Claim Engine', $3)`,
+          [userId, claimableAmount, `Daily income for ${inv.plan_name} (${claimableDays} days)`]
+        );
       }
     }
 
     if (totalClaimedNow > 0) {
       // Update User Balance & Total Income
-      db.prepare(`
-        UPDATE users
-        SET balance = balance + ?, total_income = total_income + ?
-        WHERE id = ?
-      `).run(totalClaimedNow, totalClaimedNow, userId);
+      await client.query(
+        `UPDATE users
+         SET balance = balance + $1, total_income = total_income + $2
+         WHERE id = $3`,
+        [totalClaimedNow, totalClaimedNow, userId]
+      );
     }
   });
-
-  claimTransaction();
 
   return {
     totalClaimedNow,

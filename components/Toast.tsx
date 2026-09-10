@@ -42,12 +42,12 @@ export default function ToastContainer() {
           key={t.id}
           className={`pointer-events-auto flex items-center p-3 rounded-xl shadow-xl text-xs font-semibold border transition-all animate-bounce-short ${
             t.type === 'success'
-              ? 'bg-emerald-900 text-emerald-100 border-emerald-500'
+              ? 'bg-slate-900 text-cyan-300 border-cyan-500/50 shadow-cyan-900/20'
               : 'bg-rose-900 text-rose-100 border-rose-500'
           }`}
         >
           {t.type === 'success' ? (
-            <CheckCircle2 className="w-4 h-4 mr-2 text-emerald-400 shrink-0" />
+            <CheckCircle2 className="w-4 h-4 mr-2 text-cyan-400 shrink-0" />
           ) : (
             <AlertCircle className="w-4 h-4 mr-2 text-rose-400 shrink-0" />
           )}
