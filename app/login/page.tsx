@@ -78,12 +78,12 @@ export default function LoginPage() {
               Official Clean Energy Terminal
             </div>
 
-            <div className="relative w-48 h-16 mx-auto mb-2">
+            <div className="relative w-52 h-16 mx-auto mb-2">
               <Image
-                src="/catl_logo.png"
+                src="/catl_logo_transparent.png"
                 alt="CATL Contemporary Amperex Technology Co., Limited Logo"
                 fill
-                className="object-contain drop-shadow-[0_0_15px_rgba(34,211,238,0.4)]"
+                className="object-contain filter drop-shadow-[0_0_12px_rgba(34,211,238,0.5)]"
                 priority
               />
             </div>

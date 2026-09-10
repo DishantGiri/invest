@@ -60,12 +60,12 @@ function AdminLoginForm() {
     <div className="min-h-[85vh] flex flex-col justify-center px-4 py-8 max-w-md mx-auto">
       <div className="bg-slate-900 text-white rounded-3xl shadow-2xl overflow-hidden border border-slate-800">
         <div className="bg-slate-950 p-6 text-center border-b border-slate-800">
-          <div className="relative w-44 h-14 mx-auto mb-2">
+          <div className="relative w-48 h-16 mx-auto mb-2">
             <Image
-              src="/catl_logo.png"
+              src="/catl_logo_transparent.png"
               alt="CATL Official Logo"
               fill
-              className="object-contain drop-shadow-[0_0_12px_rgba(34,211,238,0.4)]"
+              className="object-contain filter drop-shadow-[0_0_12px_rgba(34,211,238,0.5)]"
               priority
             />
           </div>

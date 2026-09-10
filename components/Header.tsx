@@ -43,7 +43,7 @@ export default function Header() {
         <Link href="/" className="flex items-center space-x-3 group">
           <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-slate-900 border border-slate-800 flex items-center justify-center shadow-lg shadow-cyan-500/10 group-hover:scale-105 transition-transform p-1">
             <Image
-              src="/catl_logo.png"
+              src="/catl_logo_transparent.png"
               alt="Contemporary Amperex Technology Co. Limited Logo"
               width={40}
               height={40}

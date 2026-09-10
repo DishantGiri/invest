@@ -114,7 +114,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="bg-slate-100 min-h-screen text-slate-800 antialiased pb-20 md:pb-8 selection:bg-blue-600 selection:text-white">
+      <body className="bg-slate-950 min-h-screen text-slate-100 antialiased pb-20 md:pb-8 selection:bg-blue-600 selection:text-white">
         <ToastContainer />
         <Header />
         <main className="max-w-md md:max-w-7xl mx-auto min-h-[calc(100vh-4rem)]">
