@@ -11,9 +11,11 @@ const connectionString =
   process.env.DATABASE_URL ||
   'postgres://postgres:postgres@localhost:5432/catl_invest';
 
+const isSupabase = connectionString.includes('supabase.co') || connectionString.includes('supabase.com');
+
 const pool = new Pool({
   connectionString,
-  ssl: process.env.NODE_ENV === 'production' && !connectionString.includes('localhost')
+  ssl: isSupabase || (process.env.NODE_ENV === 'production' && !connectionString.includes('localhost'))
     ? { rejectUnauthorized: false }
     : false
 });
