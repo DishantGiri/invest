@@ -105,6 +105,24 @@ export default function Header() {
             </div>
           )}
 
+          <a
+            href="https://t.me/CALT_costomer_care"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-blue-600/20 text-cyan-300 border border-blue-500/40 hover:bg-blue-600/40 transition-all"
+          >
+            <div className="w-4 h-4 rounded-full overflow-hidden shrink-0 border border-cyan-400">
+              <Image
+                src="/image.png"
+                alt="CATL Telegram Support"
+                width={16}
+                height={16}
+                className="object-cover w-full h-full"
+              />
+            </div>
+            <span>Support</span>
+          </a>
+
           <div className="flex items-center">
             <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-slate-950 text-cyan-400 border border-slate-800">
               <ShieldCheck className="w-3.5 h-3.5 mr-1 text-cyan-400" />

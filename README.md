@@ -12,9 +12,13 @@ yarn dev
 pnpm dev
 # or
 bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+
+## Official Customer Support
+- **Telegram Customer Support**: [https://t.me/CALT_costomer_care](https://t.me/CALT_costomer_care)
+- **Support Avatar Asset**: `/public/image.png`
+
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 

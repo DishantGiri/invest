@@ -204,7 +204,19 @@ export default function AdminDashboardPage() {
       }
 
       setSettings((prev) => ({ ...prev, [settingKey]: data.url }));
-      showToast('QR Code image uploaded successfully!', 'success');
+
+      // Auto-save setting to database immediately
+      const saveRes = await fetch('/api/admin/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ [settingKey]: data.url })
+      });
+
+      if (saveRes.ok) {
+        showToast('QR Code image uploaded and saved to database!', 'success');
+      } else {
+        showToast('QR Code uploaded, click Save Settings to persist.', 'success');
+      }
     } catch {
       showToast('File upload failed', 'error');
     } finally {
@@ -775,6 +787,53 @@ export default function AdminDashboardPage() {
                         <Upload className="w-3.5 h-3.5" />
                         <span>{uploadingQrKey === 'bank_qr_image' ? 'Uploading...' : 'Choose QR File'}</span>
                       </label>
+                      {settings.bank_qr_image && (
+                        <span className="text-[10px] font-mono text-blue-700 font-bold truncate max-w-[100px]">
+                          {settings.bank_qr_image}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* USDT (TRC20) */}
+              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
+                <h4 className="font-extrabold text-slate-900 text-xs uppercase">USDT (TRC20 Crypto) Configuration</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                  <div>
+                    <label className="block font-bold text-slate-600 mb-1">USDT Wallet Address (TRC20)</label>
+                    <input
+                      type="text"
+                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl font-bold font-mono text-xs"
+                      value={settings.usdt_address || ''}
+                      onChange={(e) => setSettings({ ...settings, usdt_address: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-bold text-slate-600 mb-1">Upload USDT QR Code Image</label>
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        id="usdt-qr-upload"
+                        className="hidden"
+                        onChange={(e) => {
+                          if (e.target.files?.[0]) handleFileUpload(e.target.files[0], 'usdt_qr_image');
+                        }}
+                      />
+                      <label
+                        htmlFor="usdt-qr-upload"
+                        className="cursor-pointer px-3 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl flex items-center space-x-1.5 text-xs shadow-sm"
+                      >
+                        <Upload className="w-3.5 h-3.5" />
+                        <span>{uploadingQrKey === 'usdt_qr_image' ? 'Uploading...' : 'Choose QR File'}</span>
+                      </label>
+                      {settings.usdt_qr_image && (
+                        <span className="text-[10px] font-mono text-blue-700 font-bold truncate max-w-[100px]">
+                          {settings.usdt_qr_image}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>

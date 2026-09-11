@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   User,
   Wallet,
@@ -235,6 +236,33 @@ export default function MinePage() {
             <ChevronRight className="w-4 h-4 text-cyan-400" />
           </Link>
         )}
+
+        <a
+          href="https://t.me/CALT_costomer_care"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full p-4.5 flex justify-between items-center hover:bg-sky-50 transition-colors"
+        >
+          <div className="flex items-center space-x-3.5">
+            <div className="w-10 h-10 rounded-2xl bg-blue-500/10 border border-blue-400/30 text-blue-600 flex items-center justify-center relative overflow-hidden">
+              <Image
+                src="/image.png"
+                alt="Telegram Customer Support"
+                width={40}
+                height={40}
+                className="object-cover w-full h-full"
+              />
+            </div>
+            <div>
+              <h4 className="text-xs font-black text-slate-900 flex items-center">
+                <span>Official Customer Support</span>
+                <span className="ml-2 bg-blue-100 text-blue-700 font-extrabold text-[9px] px-1.5 py-0.5 rounded">24/7 Telegram</span>
+              </h4>
+              <p className="text-[11px] text-slate-500 font-medium">Contact official CATL helpdesk: @CALT_costomer_care</p>
+            </div>
+          </div>
+          <ChevronRight className="w-4 h-4 text-blue-500" />
+        </a>
 
         <button
           onClick={handleLogout}

@@ -1,4 +1,5 @@
-import { Pool, PoolClient } from 'pg';
+import { Pool } from 'pg';
+import type { PoolClient } from 'pg';
 import bcrypt from 'bcryptjs';
 import pg from 'pg';
 
@@ -21,7 +22,20 @@ export function getPool(): Pool {
       connectionString,
       ssl: isSupabase || (process.env.NODE_ENV === 'production' && !connectionString.includes('localhost'))
         ? { rejectUnauthorized: false }
-        : false
+        : false,
+      max: 10,
+      idleTimeoutMillis: 10000,
+      connectionTimeoutMillis: 10000,
+      keepAlive: true,
+      keepAliveInitialDelayMillis: 10000
+    });
+
+    poolInstance.on('error', (err) => {
+      console.error('Unexpected error on idle PostgreSQL pool client:', err);
+      try {
+        poolInstance?.end();
+      } catch {}
+      poolInstance = null;
     });
   }
   return poolInstance;

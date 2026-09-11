@@ -3,6 +3,7 @@ import './globals.css';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import ToastContainer from '@/components/Toast';
+import CustomerSupportWidget from '@/components/CustomerSupportWidget';
 
 export const viewport: Viewport = {
   themeColor: '#2563eb',
@@ -121,6 +122,7 @@ export default function RootLayout({
           {children}
         </main>
         <BottomNav />
+        <CustomerSupportWidget />
       </body>
     </html>
   );

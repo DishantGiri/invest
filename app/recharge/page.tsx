@@ -139,6 +139,33 @@ export default function RechargePage() {
             </p>
           </div>
         </div>
+
+        {/* Telegram Support Notice Banner */}
+        <a
+          href="https://t.me/CALT_costomer_care"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 p-3 bg-blue-900/40 border border-cyan-500/30 rounded-2xl flex items-center justify-between hover:bg-blue-900/60 transition-all text-xs"
+        >
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 rounded-xl overflow-hidden border border-cyan-400 shrink-0">
+              <Image
+                src="/image.png"
+                alt="CATL Customer Support"
+                width={32}
+                height={32}
+                className="object-cover w-full h-full"
+              />
+            </div>
+            <div>
+              <p className="font-extrabold text-cyan-300">Need help with deposit?</p>
+              <p className="text-[10px] text-slate-300">Chat with CATL Telegram Customer Care: @CALT_costomer_care</p>
+            </div>
+          </div>
+          <span className="bg-cyan-400 text-slate-950 px-2.5 py-1 rounded-xl font-black text-[10px] shrink-0">
+            Contact Support
+          </span>
+        </a>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
