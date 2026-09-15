@@ -126,10 +126,6 @@ function AdminLoginForm() {
             </div>
           </div>
 
-          <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-[11px] text-slate-600">
-            <span className="font-extrabold text-slate-900">Initial System Admin Credentials:</span><br />
-            Email: <code className="text-blue-600 font-bold">admin@catl.com</code> | Password: <code className="text-blue-600 font-bold">admin123</code> (Can be changed in Admin Dashboard Settings)
-          </div>
 
           <button
             type="submit"
