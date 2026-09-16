@@ -181,6 +181,7 @@ export default function RechargePage() {
               src={currentPaymentInfo.qrImage}
               alt="Payment Gateway QR Code"
               fill
+              unoptimized
               className="object-contain p-1"
             />
           </div>
