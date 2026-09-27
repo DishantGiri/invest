@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSessionUser } from '@/lib/auth';
-import { query, queryOne, withTransaction } from '@/lib/db';
+import { query, queryOne, withTransaction, getSystemSettings } from '@/lib/db';
 
 export async function GET() {
   try {
@@ -15,7 +15,9 @@ export async function GET() {
       ORDER BY id DESC
     `, [session.id]);
 
-    return NextResponse.json({ success: true, withdrawals });
+    const settings = await getSystemSettings();
+
+    return NextResponse.json({ success: true, withdrawals, settings });
   } catch (error: any) {
     return NextResponse.json({ error: 'Failed to fetch withdrawal history' }, { status: 500 });
   }
@@ -30,9 +32,12 @@ export async function POST(req: Request) {
 
     const { amount, bank_name, account_name, account_number } = await req.json();
 
+    const settings = await getSystemSettings();
+    const minWithdraw = Number(settings.min_withdraw || '300');
+
     const withdrawAmount = Number(amount);
-    if (isNaN(withdrawAmount) || withdrawAmount < 100) {
-      return NextResponse.json({ error: 'Minimum withdrawal amount is NPR 100' }, { status: 400 });
+    if (isNaN(withdrawAmount) || withdrawAmount < minWithdraw) {
+      return NextResponse.json({ error: `Minimum withdrawal amount is NPR ${minWithdraw}` }, { status: 400 });
     }
 
     if (!bank_name || !account_name || !account_number) {

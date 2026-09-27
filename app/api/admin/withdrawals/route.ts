@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSessionUser } from '@/lib/auth';
-import { query, queryOne, withTransaction } from '@/lib/db';
+import { query, queryOne, execute, withTransaction } from '@/lib/db';
 
 export async function GET() {
   try {
@@ -30,18 +30,80 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Access denied' }, { status: 403 });
     }
 
-    const { transactionId, action, adminNote } = await req.json();
+    const body = await req.json();
+    const { action, transactionId, adminNote, user_id, amount, payment_method, payment_details, status } = body;
 
+    // CREATE MANUAL WITHDRAWAL
+    if (action === 'create') {
+      if (!user_id || !amount) {
+        return NextResponse.json({ error: 'User ID and Amount are required' }, { status: 400 });
+      }
+
+      const withdrawAmt = Number(amount);
+      const isApproved = status === 'approved' || status === 'completed';
+
+      const txnId = await withTransaction(async (client) => {
+        const res = await client.query(`
+          INSERT INTO transactions (user_id, type, amount, status, payment_method, payment_details, admin_note)
+          VALUES ($1, 'withdrawal', $2, $3, $4, $5, $6)
+          RETURNING id
+        `, [
+          user_id,
+          withdrawAmt,
+          status || 'approved',
+          payment_method || 'Admin Manual Payout',
+          payment_details || 'Manual Withdrawal processed by Admin',
+          adminNote || 'Created by Admin'
+        ]);
+
+        if (isApproved) {
+          await client.query(`
+            UPDATE users
+            SET balance = balance - $1, total_withdrawal = total_withdrawal + $2
+            WHERE id = $3
+          `, [withdrawAmt, withdrawAmt, user_id]);
+        }
+
+        return res.rows[0]?.id;
+      });
+
+      return NextResponse.json({ success: true, message: 'Manual withdrawal recorded successfully!', transactionId: txnId });
+    }
+
+    // EDIT WITHDRAWAL TRANSACTION
+    if (action === 'edit' && transactionId) {
+      const txn = await queryOne("SELECT * FROM transactions WHERE id = ? AND type = 'withdrawal'", [transactionId]) as any;
+      if (!txn) {
+        return NextResponse.json({ error: 'Withdrawal transaction not found' }, { status: 404 });
+      }
+
+      await execute(`
+        UPDATE transactions
+        SET amount = ?, payment_method = ?, payment_details = ?, status = ?, admin_note = ?
+        WHERE id = ?
+      `, [
+        Number(amount !== undefined ? amount : txn.amount),
+        payment_method || txn.payment_method,
+        payment_details || txn.payment_details,
+        status || txn.status,
+        adminNote || txn.admin_note,
+        transactionId
+      ]);
+
+      return NextResponse.json({ success: true, message: 'Withdrawal transaction updated!' });
+    }
+
+    // APPROVE OR REJECT PENDING WITHDRAWAL
     const txn = await queryOne("SELECT * FROM transactions WHERE id = ? AND type = 'withdrawal'", [transactionId]) as any;
     if (!txn) {
       return NextResponse.json({ error: 'Withdrawal transaction not found' }, { status: 404 });
     }
 
-    if (txn.status !== 'pending') {
+    if (txn.status !== 'pending' && action !== 'approve_override') {
       return NextResponse.json({ error: `Transaction is already ${txn.status}` }, { status: 400 });
     }
 
-    if (action === 'approve') {
+    if (action === 'approve' || action === 'approve_override') {
       await withTransaction(async (client) => {
         await client.query(`
           UPDATE transactions
@@ -80,5 +142,27 @@ export async function POST(req: Request) {
   } catch (error: any) {
     console.error('Admin Withdrawal Action Error:', error);
     return NextResponse.json({ error: 'Action failed' }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: Request) {
+  try {
+    const session = await getSessionUser();
+    if (!session || session.role !== 'admin') {
+      return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+    }
+
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json({ error: 'Transaction ID is required' }, { status: 400 });
+    }
+
+    await execute("DELETE FROM transactions WHERE id = ? AND type = 'withdrawal'", [id]);
+
+    return NextResponse.json({ success: true, message: 'Withdrawal record deleted!' });
+  } catch (error: any) {
+    return NextResponse.json({ error: 'Failed to delete withdrawal transaction' }, { status: 500 });
   }
 }

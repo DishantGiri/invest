@@ -22,6 +22,9 @@ export default function WithdrawPage() {
   const [accountNumber, setAccountNumber] = useState('');
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState<Transaction[]>([]);
+  const [settings, setSettings] = useState<Record<string, string>>({});
+
+  const minWithdraw = Number(settings.min_withdraw || '300');
 
   const fetchProfileAndHistory = useCallback(async () => {
     try {
@@ -39,6 +42,9 @@ export default function WithdrawPage() {
       if (wData.withdrawals) {
         setHistory(wData.withdrawals);
       }
+      if (wData.settings) {
+        setSettings(wData.settings);
+      }
     } catch {
       // ignore
     }
@@ -52,8 +58,8 @@ export default function WithdrawPage() {
     e.preventDefault();
 
     const withdrawAmt = Number(amount);
-    if (isNaN(withdrawAmt) || withdrawAmt < 100) {
-      showToast('Minimum withdrawal amount is NPR 100', 'error');
+    if (isNaN(withdrawAmt) || withdrawAmt < minWithdraw) {
+      showToast(`Minimum withdrawal amount is NPR ${minWithdraw}`, 'error');
       return;
     }
 
@@ -120,14 +126,19 @@ export default function WithdrawPage() {
       <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm space-y-4">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
-              Withdrawal Amount (NPR)
-            </label>
+            <div className="flex justify-between items-center mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 uppercase">
+                Withdrawal Amount (NPR)
+              </label>
+              <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                Min: NPR {minWithdraw}
+              </span>
+            </div>
             <input
               type="number"
-              min="100"
+              min={minWithdraw}
               required
-              placeholder="Min NPR 100"
+              placeholder={`Min NPR ${minWithdraw}`}
               className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-base font-black text-blue-600 focus:outline-none focus:border-blue-600 focus:bg-white"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}

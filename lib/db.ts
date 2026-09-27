@@ -219,6 +219,8 @@ export async function initDb() {
     const defaultSettings: Record<string, string> = {
       tier1_referral_percent: '10',
       tier2_referral_percent: '3',
+      min_recharge: '500',
+      min_withdraw: '300',
       esewa_account_name: 'CATL Energy Nepal Pvt Ltd',
       esewa_account_number: '9841234567',
       esewa_qr_image: '/payment_qr.png',
@@ -230,7 +232,8 @@ export async function initDb() {
       bank_qr_image: '/payment_qr.png',
       usdt_address: 'TRX79841234567890abcdef1234567890 (TRC20)',
       usdt_qr_image: '/payment_qr.png',
-      logo_image: '/catl_logo.png'
+      logo_image: '/catl_logo.png',
+      telegram_support_link: 'https://t.me/CALT_costomer_care'
     };
 
     for (const [key, value] of Object.entries(defaultSettings)) {

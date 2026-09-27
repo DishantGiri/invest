@@ -91,3 +91,26 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: 'Failed to update plan status' }, { status: 500 });
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const session = await getSessionUser();
+    if (!session || session.role !== 'admin') {
+      return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+    }
+
+    const { searchParams } = new URL(req.url);
+    const planId = searchParams.get('id');
+
+    if (!planId) {
+      return NextResponse.json({ error: 'Plan ID is required' }, { status: 400 });
+    }
+
+    await execute('DELETE FROM investment_plans WHERE id = ?', [planId]);
+
+    return NextResponse.json({ success: true, message: 'Investment plan deleted successfully!' });
+  } catch (error: any) {
+    console.error('Delete Plan Error:', error);
+    return NextResponse.json({ error: 'Failed to delete plan' }, { status: 500 });
+  }
+}

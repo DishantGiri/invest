@@ -32,9 +32,12 @@ export async function POST(req: Request) {
 
     const { amount, payment_method, transaction_ref, sender_info } = await req.json();
 
+    const settings = await getSystemSettings();
+    const minRecharge = Number(settings.min_recharge || '500');
+
     const depositAmount = Number(amount);
-    if (isNaN(depositAmount) || depositAmount <= 0) {
-      return NextResponse.json({ error: 'Please enter a valid deposit amount' }, { status: 400 });
+    if (isNaN(depositAmount) || depositAmount < minRecharge) {
+      return NextResponse.json({ error: `Minimum deposit amount is NPR ${minRecharge}` }, { status: 400 });
     }
 
     if (!payment_method) {

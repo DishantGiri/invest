@@ -70,8 +70,16 @@ export default function RechargePage() {
     }
   };
 
+  const minDeposit = Number(settings.min_recharge || '500');
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (Number(amount) < minDeposit) {
+      showToast(`Minimum deposit amount is NPR ${minDeposit}`, 'error');
+      return;
+    }
+
     setLoading(true);
 
     let detailsStr = '';
@@ -222,13 +230,19 @@ export default function RechargePage() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
-                Recharge Amount (NPR)
-              </label>
+              <div className="flex justify-between items-center mb-1.5">
+                <label className="block text-xs font-bold text-slate-700 uppercase">
+                  Recharge Amount (NPR)
+                </label>
+                <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                  Min: NPR {minDeposit}
+                </span>
+              </div>
               <input
                 type="number"
                 required
-                min="100"
+                min={minDeposit}
+                placeholder={`Min NPR ${minDeposit}`}
                 className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-base font-black text-blue-600 focus:outline-none focus:border-blue-600 focus:bg-white"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
