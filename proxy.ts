@@ -18,7 +18,7 @@ export async function proxy(request: NextRequest) {
       loginUrl.searchParams.set('error', 'Please login with an Admin account.');
       return NextResponse.redirect(loginUrl);
     }
-
+                                                            
     try {
       const verified = await jwtVerify(token, JWT_SECRET);
       const payload = verified.payload as { role?: string };
