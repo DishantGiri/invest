@@ -232,13 +232,13 @@ export async function initDb() {
       bank_qr_image: '/payment_qr.png',
       usdt_address: 'TRX79841234567890abcdef1234567890 (TRC20)',
       usdt_qr_image: '/payment_qr.png',
-      logo_image: '/catl_logo.png',
-      telegram_support_link: 'https://t.me/CALT_costomer_care'
+      telegram_support_link: 'https://wa.me/message/UBPVDRWPZGS7H1?src=qr',
+      whatsapp_support_link: 'https://wa.me/message/UBPVDRWPZGS7H1?src=qr'
     };
 
     for (const [key, value] of Object.entries(defaultSettings)) {
       await getPool().query(
-        'INSERT INTO system_settings (key, value) VALUES ($1, $2) ON CONFLICT (key) DO NOTHING',
+        'INSERT INTO system_settings (key, value) VALUES ($1, $2) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value WHERE system_settings.value LIKE \'%t.me%\'',
         [key, value]
       );
     }

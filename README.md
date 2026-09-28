@@ -16,8 +16,7 @@ bun dev
 
 
 ## Official Customer Support
-- **Telegram Customer Support**: [https://t.me/CALT_costomer_care](https://t.me/CALT_costomer_care)
-- **Support Avatar Asset**: `/public/image.png`
+- **WhatsApp Customer Support**: [https://wa.me/message/UBPVDRWPZGS7H1?src=qr](https://wa.me/message/UBPVDRWPZGS7H1?src=qr)
 
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.

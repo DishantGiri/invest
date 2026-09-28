@@ -711,20 +711,20 @@ export default function AdminDashboardPage() {
 
             {/* Support Link Info */}
             <div className="bg-slate-900 text-white p-6 rounded-3xl border border-slate-800 shadow-xl space-y-3">
-              <h3 className="text-sm font-black text-cyan-400 uppercase tracking-wider flex items-center">
-                <MessageCircle className="w-4 h-4 mr-2 text-cyan-400" />
-                Telegram Customer Care
+              <h3 className="text-sm font-black text-emerald-400 uppercase tracking-wider flex items-center">
+                <MessageCircle className="w-4 h-4 mr-2 text-emerald-400" />
+                WhatsApp Customer Care
               </h3>
               <p className="text-xs text-slate-300">
-                Official Telegram Support URL displayed to users on deposit and support pages:
+                Official WhatsApp Support URL displayed to users on deposit and support pages:
               </p>
               <a
-                href={settings.telegram_support_link || 'https://t.me/CALT_costomer_care'}
+                href={settings.whatsapp_support_link || settings.telegram_support_link || 'https://wa.me/message/UBPVDRWPZGS7H1?src=qr'}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-block text-xs font-mono font-bold text-cyan-300 bg-slate-950 px-3 py-2 rounded-xl border border-slate-800 underline truncate max-w-full"
+                className="inline-block text-xs font-mono font-bold text-emerald-300 bg-slate-950 px-3 py-2 rounded-xl border border-slate-800 underline truncate max-w-full"
               >
-                {settings.telegram_support_link || 'https://t.me/CALT_costomer_care'}
+                {settings.whatsapp_support_link || settings.telegram_support_link || 'https://wa.me/message/UBPVDRWPZGS7H1?src=qr'}
               </a>
             </div>
           </div>
@@ -1505,20 +1505,20 @@ export default function AdminDashboardPage() {
             {/* CUSTOMER SUPPORT LINK */}
             <div className="bg-white p-6 rounded-3xl border border-slate-200/90 shadow-sm space-y-4">
               <h3 className="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center">
-                <MessageCircle className="w-5 h-5 text-blue-600 mr-2" />
-                Customer Support Telegram Link
+                <MessageCircle className="w-5 h-5 text-emerald-600 mr-2" />
+                Customer Support WhatsApp Link
               </h3>
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
-                  Telegram Group / Customer Support URL
+                  WhatsApp Customer Support URL
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder="https://t.me/CALT_costomer_care"
+                  placeholder="https://wa.me/message/UBPVDRWPZGS7H1?src=qr"
                   className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-bold text-slate-900"
-                  value={settings.telegram_support_link || 'https://t.me/CALT_costomer_care'}
-                  onChange={(e) => setSettings({ ...settings, telegram_support_link: e.target.value })}
+                  value={settings.whatsapp_support_link || settings.telegram_support_link || 'https://wa.me/message/UBPVDRWPZGS7H1?src=qr'}
+                  onChange={(e) => setSettings({ ...settings, whatsapp_support_link: e.target.value, telegram_support_link: e.target.value })}
                 />
               </div>
             </div>
